@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصور سامي | لوحة التحكم وعجلة الحظ وسجل الفائزين</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0a0e17;
+            --card-bg: #121824;
+            --card-border: #1e293b;
+            --gold-gradient: linear-gradient(135deg, #f59e0b, #d97706);
+            --gold-light: #fbbf24;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 90px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            padding: 16px;
+        }
+
+        .page-section { display: none; }
+        .page-section.active { display: block; }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .btn-top-login {
+            background: var(--gold-gradient);
+            color: #ffffff;
+            font-weight: 800;
+            padding: 8px 20px;
+            border-radius: 12px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3);
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .brand-text .name-ar {
+            font-size: 17px;
+            font-weight: 900;
+            color: var(--gold-light);
+            line-height: 1.1;
+        }
+
+        .brand-text .name-en {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            background: #1e293b;
+            border: 2px solid var(--gold-light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: var(--gold-light);
+            font-size: 16px;
+        }
+
+        .profile-header {
+            display: none;
+            background: var(--card-bg);
+            border: 1px solid var(--gold-light);
+            border-radius: 18px;
+            padding: 14px;
+            margin-bottom: 16px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .profile-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar-circle {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--gold-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 16px;
+            color: #000;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 20px 14px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .invite-box {
+            background: linear-gradient(135deg, #162032, #121824);
+            border: 1.5px dashed var(--gold-light);
+            border-radius: 16px;
+            padding: 15px;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        .btn-invite {
+            width: 100%;
+            background: var(--gold-gradient);
+            color: #000;
+            font-weight: 900;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 15px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0; height: 0;
+            border-left: 14px solid transparent;
+            border-right: 14px solid transparent;
+            border-top: 26px solid #e11d48;
+            z-index: 10;
+        }
+
+        canvas {
+            border-radius: 50%;
+            border: 5px solid var(--gold-light);
+        }
+
+        .btn-spin {
+            width: 100%;
+            max-width: 260px;
+            padding: 14px;
+            background: var(--gold-gradient);
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 900;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        /* Winners List */
+        .winners-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 220px;
+            overflow-y: auto;
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .winner-item {
+            background: #0d121d;
+            border: 1px solid var(--card-border);
+            padding: 10px 12px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .winner-name { font-weight: 800; color: #fff; }
+        .winner-prize { color: var(--gold-light); font-weight: 900; font-size: 12px; }
+
+        /* Admin Bar */
+        .admin-bar {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 1px dashed var(--gold-light);
+            padding: 12px 16px;
+            border-radius: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .btn-admin {
+            background: var(--gold-gradient);
+            color: #000;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-weight: 900;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-img-container {
+            width: 100%;
+            height: 100px;
+            background: #1a2234;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .product-tag {
+            position: absolute;
+            top: 8px; right: 8px;
+            background: rgba(0,0,0,0.6);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            color: var(--gold-light);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+
+        .product-content {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+
+        .product-title { font-size: 13px; font-weight: 900; margin-bottom: 2px; }
+        .product-desc { font-size: 10px; color: var(--text-muted); margin-bottom: 6px; }
+        .product-footer { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 11px; }
+        .price { color: var(--gold-light); font-weight: 900; }
+        .stock { color: var(--text-muted); }
+
+        .btn-buy {
+            width: 100%;
+            background: var(--gold-gradient);
+            color: #fff;
+            border: none;
+            padding: 7px;
+            border-radius: 8px;
+            font-weight: 900;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* Modals */
+        .modal-bg {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(5, 7, 12, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .modal-box {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 20px;
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+        }
+
+        .modal-input {
+            width: 100%;
+            background: #0d121d;
+            border: 1px solid var(--card-border);
+            padding: 10px;
+            border-radius: 10px;
+            color: #fff;
+            margin-bottom: 10px;
+            font-family: 'Tajawal';
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: #0d121d;
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 12px 0;
+            max-width: 480px;
+            margin: 0 auto;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .nav-item.active { color: var(--gold-light); }
+        .nav-item .nav-icon { font-size: 18px; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <header>
+            <button class="btn-top-login" id="topLoginBtn" onclick="openSubModal()">تسجيل الدخول</button>
+            <div class="brand-logo">
+                <div class="brand-text">
+                    <span class="name-ar">منصور سامي</span>
+                    <span class="name-en">MANSOUR</span>
+                </div>
+                <div class="logo-icon">م</div>
+            </div>
+        </header>
+
+        <div class="profile-header" id="profileHeader">
+            <div class="profile-user-info">
+                <div class="avatar-circle">من</div>
+                <div>
+                    <h4 style="font-size: 15px; font-weight: 900;">منصور سامي</h4>
+                    <span style="color: var(--gold-light); font-size: 12px; font-weight: 800;" id="userPoints">الرصيد: 50 نقطة</span>
+                </div>
+            </div>
+            <button onclick="logout()" style="background:#ef4444; color:#fff; border:none; padding:6px 12px; border-radius:8px; font-weight:800; font-size:12px; cursor:pointer;">خروج</button>
+        </div>
+
+        <div id="page-home" class="page-section active">
+            <div class="card">
+                <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 6px;">👥 ادعُ أصدقاءك واكسب</h3>
+                <p style="color: var(--text-muted); font-size: 12px; line-height: 1.5;">كل صديق يسجل من رابطك الخاص يمنحك فوراً <span style="color: var(--gold-light); font-weight: 800;">50 نقطة</span> لتجمعها وتربح جوائز المتجر!</p>
+                <div class="invite-box">
+                    <span style="font-size: 11px; color: var(--text-muted);">رابط الدعوة الخاص بك:</span>
+                    <div style="font-size: 12px; color: var(--gold-light); font-weight: 800; margin: 6px 0; word-break: break-all;">t.me/ccc2ooo?start=ref_SAM102</div>
+                    <button class="btn-invite" onclick="copyInviteLink()">🔗 نسخ رابط الإحالة</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 4px;">🎡 أدر العجلة مجاناً واكسب</h3>
+                <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 10px;">تدوير العجلة <span style="color: var(--gold-light); font-weight: 800;">بدون أي نقاط</span>، جرب حظك يومياً!</p>
+                <div class="wheel-container">
+                    <div class="wheel-pointer"></div>
+                    <canvas id="wheelCanvas" width="270" height="270"></canvas>
+                </div>
+                <button class="btn-spin" onclick="spinWheel()">🚀 تدوير العجلة مجاناً</button>
+            </div>
+        </div>
+
+        <div id="page-store" class="page-section">
+            <div class="admin-bar">
+                <span style="font-size: 11px; font-weight: 800;">🛠️ لوحة التحكم</span>
+                <div style="display: flex; gap: 4px;">
+                    <button class="btn-admin" onclick="openAdminModal('wheel')">+ جائزة عجلة</button>
+                    <button class="btn-admin" onclick="openAdminModal('store')" style="background:var(--text-main); color:#000;">+ متجر</button>
+                    <button class="btn-admin" onclick="openAdminModal('winner')" style="background:#3b82f6; color:#fff;">+ فائز</button>
+                </div>
+            </div>
+
+            <div class="products-grid" id="productsContainer">
+                <div class="product-card">
+                    <div class="product-img-container"><span class="product-tag">عادية</span><span style="font-size: 28px;">📸</span></div>
+                    <div class="product-content">
+                        <div>
+                            <div class="product-title">رشق انستغرام</div>
+                            <div class="product-desc">1k متابع لحسابك</div>
+                        </div>
+                        <div>
+                            <div class="product-footer"><span class="price">3000 نقطة</span><span class="stock">متبقي 66</span></div>
+                            <button class="btn-buy" onclick="buyItem('رشق انستغرام', 3000)">شراء</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-img-container"><span class="product-tag">نادرة</span><span style="font-size: 28px;">💎</span></div>
+                    <div class="product-content">
+                        <div>
+                            <div class="product-title">60 شدة ببجي</div>
+                            <div class="product-desc">شحن شدات مباشرة</div>
+                        </div>
+                        <div>
+                            <div class="product-footer"><span class="price">5000 نقطة</span><span class="stock">متبقي 262</span></div>
+                            <button class="btn-buy" onclick="buyItem('60 شدة', 5000)">شراء</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-prizes" class="page-section">
+            <div class="card">
+                <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 4px;">🏆 سجل الفائزين الحقيقيين</h3>
+                <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 12px;">أسماء الفائزين بجوائز عجلة الحظ اليومية</p>
+                <div class="winners-list" id="winnersContainer">
+                    <div class="winner-item">
+                        <span class="winner-name">أحمد الكرخي (***41)</span>
+                        <span class="winner-prize">🎁 حساب ببجي</span>
+                    </div>
+                    <div class="winner-item">
+                        <span class="winner-name">مصطفى البصري (***88)</span>
+                        <span class="winner-prize">💎 كارت سياره</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-notifs" class="page-section">
+            <div class="card">
+                <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 8px;">🔔 الإشعارات</h3>
+                <p style="color: var(--text-muted); font-size: 13px;">لا توجد إشعارات جديدة حالياً.</p>
+            </div>
+        </div>
+
+        <div id="page-profile" class="page-section">
+            <div class="card">
+                <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 8px;">👤 ملف اللاعب</h3>
+                <p style="color: var(--text-muted); font-size: 13px;">قناة التليجرام: @ccc2ooo</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-bg" id="subModal">
+        <div class="modal-box">
+            <h2 style="font-size: 18px; font-weight: 900; margin-bottom: 6px;">الانضمام لقناة منصور سامي</h2>
+            <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 12px;">انضم لقناتنا على التليجرام لفتح عجلة الحظ والجوائز</p>
+            <a href="https://t.me/ccc2ooo" target="_blank" style="display:block; background:#0d121d; border:1px solid var(--gold-light); padding:10px; border-radius:10px; color:#fff; text-decoration:none; font-weight:800; margin-bottom:12px;">@ccc2ooo ↗</a>
+            <button onclick="verifyLogin()" style="width:100%; background:var(--gold-gradient); color:#000; font-weight:900; padding:10px; border-radius:10px; border:none; cursor:pointer;">تأكيد الانضمام</button>
+        </div>
+    </div>
+
+    <div class="modal-bg" id="adminModal">
+        <div class="modal-box">
+            <h3 id="adminModalTitle" style="font-size: 16px; font-weight: 900; margin-bottom: 12px; color: var(--gold-light);">إضافة عنصر جديد</h3>
+            <input type="text" id="inputName" class="modal-input" placeholder="اسم الجائزة أو الفائز">
+            <input type="text" id="inputExtra" class="modal-input" placeholder="النسبة أو نوع الجائزة">
+            <input type="text" id="inputStock" class="modal-input" placeholder="الكمية (للمتجر فقط)">
+            <div style="display: flex; gap: 8px;">
+                <button onclick="handleAdminSubmit()" style="flex:1; background:var(--gold-gradient); color:#000; border:none; padding:10px; border-radius:10px; font-weight:900; cursor:pointer;">حفظ وتحديث</button>
+                <button onclick="closeAdminModal()" style="flex:1; background:#1e293b; color:#fff; border:none; padding:10px; border-radius:10px; font-weight:900; cursor:pointer;">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-bg" id="winnerModal">
+        <div class="modal-box">
+            <h3 style="color: var(--gold-light); font-size: 20px; margin-bottom: 8px;">نتيجة السحب</h3>
+            <p id="winnerText" style="font-size: 15px; font-weight: 900; color: #fff; background: #0d121d; padding: 12px; border-radius: 10px; margin-bottom: 15px;"></p>
+            <button onclick="closeWinnerModal()" style="width:100%; background:var(--gold-gradient); color:#000; font-weight:900; padding:10px; border-radius:10px; border:none; cursor:pointer;">موافق ✨</button>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="switchPage('home', this)">
+            <span class="nav-icon">🏠</span>
+            <span>الرئيسية</span>
+        </button>
+        <button class="nav-item" onclick="switchPage('store', this)">
+            <span class="nav-icon">🛒</span>
+            <span>متجر الجوائز</span>
+        </button>
+        <button class="nav-item" onclick="switchPage('prizes', this)">
+            <span class="nav-icon">🏆</span>
+            <span>سجل الفائزين</span>
+        </button>
+        <button class="nav-item" onclick="switchPage('notifs', this)">
+            <span class="nav-icon">🔔</span>
+            <span>الإشعارات</span>
+        </button>
+        <button class="nav-item" onclick="switchPage('profile', this)">
+            <span class="nav-icon">👤</span>
+            <span>ملف اللاعب</span>
+        </button>
+    </nav>
+
+    <script>
+        let isLogged = false;
+        let myPoints = 50;
+        let currentAdminType = 'wheel';
+
+        function switchPage(pageId, btn) {
+            document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        // Wheel Data
+        let prizes = [
+            { name: "حساب ببجي", weight: 1 },
+            { name: "كارت سياره", weight: 2 },
+            { name: "تيك توك", weight: 3 },
+            { name: "20 نقطة هدية", weight: 5 }
+        ];
+        const colors = ['#f59e0b', '#334155', '#ec4899', '#3b82f6'];
+        const canvas = document.getElementById('wheelCanvas');
+        const ctx = canvas.getContext('2d');
+        let currentAngle = 0;
+        let isSpinning = false;
+
+        function drawWheel() {
+            const num = prizes.length;
+            ctx.clearRect(0, 0, 270, 270);
+            const arc = (2 * Math.PI) / num;
+            for (let i = 0; i < num; i++) {
+                const angle = i * arc + currentAngle;
+                ctx.beginPath();
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.moveTo(135, 135);
+                ctx.arc(135, 135, 130, angle, angle + arc);
+                ctx.lineTo(135, 135);
+                ctx.fill();
+                ctx.save();
+                ctx.fillStyle = "#fff";
+                ctx.translate(135, 135);
+                ctx.rotate(angle + arc / 2);
+                ctx.textAlign = "center";
+                ctx.font = "bold 12px Tajawal";
+                ctx.fillText(prizes[i].name, 75, 4);
+                ctx.restore();
+            }
+        }
+
+        function openSubModal() { document.getElementById('subModal').style.display = 'flex'; }
+        function verifyLogin() {
+            isLogged = true;
+            document.getElementById('subModal').style.display = 'none';
+            document.getElementById('topLoginBtn').style.display = 'none';
+            document.getElementById('profileHeader').style.display = 'flex';
+            alert('تم تسجيل الدخول بنجاح!');
+        }
+        function logout() {
+            isLogged = false;
+            document.getElementById('topLoginBtn').style.display = 'block';
+            document.getElementById('profileHeader').style.display = 'none';
+        }
+        function copyInviteLink() {
+            navigator.clipboard.writeText("t.me/ccc2ooo?start=ref_SAM102");
+            alert('تم نسخ رابط الإحالة!');
+        }
+
+        function spinWheel() {
+            if (!isLogged) { openSubModal(); return; }
+            if (isSpinning) return;
+            isSpinning = true;
+            let winningIndex = Math.floor(Math.random() * prizes.length);
+            const targetAngle = 6 * 2 * Math.PI + (3 * Math.PI / 2) - (winningIndex + 0.5) * ((2 * Math.PI) / prizes.length);
+            
+            let start = null;
+            function animate(ts) {
+                if (!start) start = ts;
+                let progress = (ts - start) / 4000;
+                if (progress < 1) {
+                    currentAngle = (1 - Math.pow(1 - progress, 3)) * targetAngle;
+                    drawWheel();
+                    requestAnimationFrame(animate);
+                } else {
+                    currentAngle = targetAngle % (2 * Math.PI);
+                    drawWheel();
+                    isSpinning = false;
+                    let wonPrize = prizes[winningIndex].name;
+                    
+                    if(wonPrize.includes('20 نقطة')) {
+                        myPoints += 20;
+                        document.getElementById('userPoints').innerText = `الرصيد: ${myPoints} نقطة`;
+                    }
+
+                    showWinner(wonPrize);
+                    addWinnerToList("منصور سامي (أنت)", wonPrize);
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        function showWinner(p) {
+            document.getElementById('winnerText').innerText = `مبروك! حصلت على: ${p}`;
+            document.getElementById('winnerModal').style.display = 'flex';
+        }
+        function closeWinnerModal() { document.getElementById('winnerModal').style.display = 'none'; }
+
+        function addWinnerToList(name, prize) {
+            let container = document.getElementById('winnersContainer');
+            container.innerHTML = `
+                <div class="winner-item">
+                    <span class="winner-name">${name}</span>
+                    <span class="winner-prize">🎁 ${prize}</span>
+                </div>
+            ` + container.innerHTML;
+        }
+
+        // Admin Management functions
+        function openAdminModal(type) {
+            currentAdminType = type;
+            let title = document.getElementById('adminModalTitle');
+            let nameInput = document.getElementById('inputName');
+            let extraInput = document.getElementById('inputExtra');
+            let stockInput = document.getElementById('inputStock');
+
+            if(type === 'wheel') {
+                title.innerText = "إضافة جائزة جديدة لعجلة الحظ 🎡";
+                nameInput.placeholder = "اسم الجائزة (مثلاً: حساب ببجي)";
+                extraInput.placeholder = "نسبة الظهور (مثلاً: 1)";
+                stockInput.style.display = 'none';
+            } else if(type === 'store') {
+                title.innerText = "إضافة منتج جديد للمتجر 🛒";
+                nameInput.placeholder = "اسم المنتج (مثلاً: رشق تيك توك)";
+                extraInput.placeholder = "السعر بالنقاط (مثلاً: 2500)";
+                stockInput.style.display = 'block';
+                stockInput.placeholder = "الكمية المتاحة (مثلاً: 50)";
+            } else if(type === 'winner') {
+                title.innerText = "إضافة فائز للسجل يدوياً 🏆";
+                nameInput.placeholder = "اسم الفائز (مثلاً: كرار الحلفي)";
+                extraInput.placeholder = "الجائزة التي فاز بها (مثلاً: حساب ببجي)";
+                stockInput.style.display = 'none';
+            }
+            document.getElementById('adminModal').style.display = 'flex';
+        }
+
+        function closeAdminModal() { document.getElementById('adminModal').style.display = 'none'; }
+
+        function handleAdminSubmit() {
+            let name = document.getElementById('inputName').value;
+            let extra = document.getElementById('inputExtra').value;
+            let stock = document.getElementById('inputStock').value;
+
+            if(!name || !extra) { alert('يرجى ملء الحقول الأساسية!'); return; }
+
+            if(currentAdminType === 'wheel') {
+                prizes.push({ name: name, weight: parseFloat(extra) || 1 });
+                drawWheel();
+                alert('تمت إضافة الجائزة إلى العجلة بنجاح!');
+            } else if(currentAdminType === 'store') {
+                if(!stock) { alert('يرجى تحديد الكمية للمتجر!'); return; }
+                let container = document.getElementById('productsContainer');
+                container.innerHTML += `
+                    <div class="product-card">
+                        <div class="product-img-container"><span class="product-tag">جديدة</span><span style="font-size:28px;">🎁</span></div>
+                        <div class="product-content">
+                            <div><div class="product-title">${name}</div><div class="product-desc">مضافة حديثاً</div></div>
+                            <div>
+                                <div class="product-footer"><span class="price">${extra} نقطة</span><span class="stock">متبقي ${stock}</span></div>
+                                <button class="btn-buy" onclick="buyItem('${name}', ${extra})">شراء</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                alert('تمت إضافة المنتج إلى المتجر بنجاح!');
+            } else if(currentAdminType === 'winner') {
+                addWinnerToList(name, extra);
+                alert('تمت إضافة الفائز إلى السجل بنجاح!');
+            }
+            closeAdminModal();
+            document.getElementById('inputName').value = '';
+            document.getElementById('inputExtra').value = '';
+            document.getElementById('inputStock').value = '';
+        }
+
+        function buyItem(name, price) {
+            alert(`تم طلب ${name} بنجاح مقابل ${price} نقطة!`);
+        }
+
+        drawWheel();
+    </script>
+</body>
+</html>
