@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر وعجلة الحظ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0d14;
+            --card-bg: #111622;
+            --accent-gold: #ffb703;
+            --text-main: #ffffff;
+            --text-muted: #8e9bb0;
+            
+            /* ألوان الندرة */
+            --rarity-common: #4a5568;
+            --rarity-rare: #0077b6;
+            --rarity-epic: #7209b7;
+            --rarity-legendary: #ffb703;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 70px; /* مساحة للشريط السفلي */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Top Bar */
+        header {
+            width: 100%;
+            max-width: 500px;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-login {
+            background: linear-gradient(90deg, #ffb703, #fb8500);
+            color: #000;
+            font-weight: 900;
+            padding: 8px 18px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 183, 3, 0.3);
+        }
+
+        .header-title {
+            text-align: left;
+        }
+
+        .header-title h1 {
+            font-size: 18px;
+            color: var(--accent-gold);
+        }
+
+        .header-title span {
+            font-size: 10px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+        }
+
+        /* Main Wrapper */
+        .wrapper {
+            width: 100%;
+            max-width: 500px;
+            padding: 0 15px;
+        }
+
+        /* Wheel Section */
+        .wheel-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .wheel-stage {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 15px 0;
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 14px solid transparent;
+            border-right: 14px solid transparent;
+            border-top: 22px solid var(--accent-gold);
+            z-index: 10;
+        }
+
+        canvas {
+            border-radius: 50%;
+            border: 4px solid var(--accent-gold);
+            box-shadow: 0 0 25px rgba(255, 183, 3, 0.2);
+        }
+
+        .btn-center-spin {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: #000;
+            border: 3px solid var(--accent-gold);
+            border-radius: 50%;
+            color: var(--accent-gold);
+            font-weight: 900;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 5;
+            box-shadow: 0 0 15px rgba(0,0,0,0.8);
+        }
+
+        .wheel-subtext {
+            color: var(--text-muted);
+            font-size: 13px;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        /* Rewards List Section */
+        .rewards-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px 15px;
+        }
+
+        .rewards-header {
+            font-size: 18px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rewards-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .reward-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .reward-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .reward-img {
+            width: 42px;
+            height: 42px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #1a202c;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .reward-name {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        /* Tag Badges for Rarity */
+        .badge {
+            font-size: 11px;
+            font-weight: 900;
+            padding: 4px 10px;
+            border-radius: 6px;
+            color: #fff;
+        }
+        .badge-common { background: rgba(74, 85, 104, 0.4); border: 1px solid var(--rarity-common); color: #cbd5e0; }
+        .badge-rare { background: rgba(0, 119, 182, 0.4); border: 1px solid var(--rarity-rare); color: #90e0ef; }
+        .badge-epic { background: rgba(114, 9, 183, 0.4); border: 1px solid var(--rarity-epic); color: #e0aaff; }
+        .badge-legendary { background: rgba(255, 183, 3, 0.2); border: 1px solid var(--rarity-legendary); color: var(--accent-gold); }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: #0d111a;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 11px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: var(--accent-gold);
+        }
+
+        .nav-icon {
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <button class="btn-login" onclick="openAdmin()">تسجيل الدخول</button>
+        <div class="header-title">
+            <h1>عجلة الحظ</h1>
+            <span>STORE & WHEEL</span>
+        </div>
+    </header>
+
+    <div class="wrapper">
+        <!-- Wheel -->
+        <div class="wheel-box">
+            <div class="wheel-stage">
+                <div class="wheel-pointer"></div>
+                <canvas id="wheelCanvas" width="300" height="300"></canvas>
+                <button class="btn-center-spin" onclick="spinWheel()">أدر</button>
+            </div>
+            <div class="wheel-subtext">سجّل الدخول بحساب رسمي لتلف العجلة مجاناً كل 24 ساعة</div>
+        </div>
+
+        <!-- Rewards List -->
+        <div class="rewards-card">
+            <div class="rewards-header">🎁 جوائز العجلة</div>
+            <div class="rewards-list" id="rewardsList"></div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-item active">
+            <span class="nav-icon">🏠</span>
+            <span>الرئيسية</span>
+        </div>
+        <div class="nav-item">
+            <span class="nav-icon">🛒</span>
+            <span>متجر الجوائز</span>
+        </div>
+        <div class="nav-item">
+            <span class="nav-icon">🎁</span>
+            <span>جوائزي</span>
+        </div>
+        <div class="nav-item">
+            <span class="nav-icon">🔔</span>
+            <span>الإشعارات</span>
+        </div>
+        <div class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span>ملف اللاعب</span>
+        </div>
+    </nav>
+
+    <script>
+        // الجوائز مع الندرة والأيقونات
+        let items = JSON.parse(localStorage.getItem('wheel_items')) || [
+            { name: "100 الف دينار عراقي", rarity: "common", img: "https://via.placeholder.com/50/ffb703/000000?text=IQD" },
+            { name: "1000 شده ببجي", rarity: "common", img: "https://via.placeholder.com/50/0077b6/ffffff?text=UC" },
+            { name: "100 نقطة", rarity: "rare", img: "https://via.placeholder.com/50/7209b7/ffffff?text=100P" },
+            { name: "حساب تيك توك 15k", rarity: "epic", img: "https://via.placeholder.com/50/00f0ff/000000?text=TK" },
+            { name: "250 نقطة", rarity: "common", img: "https://via.placeholder.com/50/7209b7/ffffff?text=250P" },
+            { name: "كارت سيارة $200", rarity: "epic", img: "https://via.placeholder.com/50/ff007f/ffffff?text=CARD" },
+            { name: "جائزة أسطورية", rarity: "legendary", img: "https://via.placeholder.com/50/ffb703/000000?text=★" },
+            { name: "حساب ببجي قيمته $150", rarity: "common", img: "https://via.placeholder.com/50/0077b6/ffffff?text=PUBG" },
+            { name: "رويال باس", rarity: "common", img: "https://via.placeholder.com/50/ffb703/000000?text=RP" },
+            { name: "حساب انستا 10k", rarity: "common", img: "https://via.placeholder.com/50/ff007f/ffffff?text=IG" },
+            { name: "رشق تيك توك", rarity: "common", img: "https://via.placeholder.com/50/00f0ff/000000?text=TK" },
+            { name: "رشق حسابك الانستا", rarity: "common", img: "https://via.placeholder.com/50/ff007f/ffffff?text=IG" }
+        ];
+
+        const rarityMap = {
+            common: { text: "عادية", class: "badge-common" },
+            rare: { text: "نادرة", class: "badge-rare" },
+            epic: { text: "ملحمية", class: "badge-epic" },
+            legendary: { text: "أسطورية", class: "badge-legendary" }
+        };
+
+        const canvas = document.getElementById('wheelCanvas');
+        const ctx = canvas.getContext('2d');
+        let currentAngle = 0;
+        let isSpinning = false;
+
+        function drawWheel() {
+            const num = items.length;
+            if (num === 0) return;
+            const arc = (2 * Math.PI) / num;
+            ctx.clearRect(0, 0, 300, 300);
+
+            for (let i = 0; i < num; i++) {
+                const angle = i * arc + currentAngle;
+                ctx.beginPath();
+                ctx.fillStyle = i % 2 === 0 ? '#161d2b' : '#0d121d';
+                ctx.moveTo(150, 150);
+                ctx.arc(150, 150, 145, angle, angle + arc);
+                ctx.lineTo(150, 150);
+                ctx.fill();
+                ctx.strokeStyle = "rgba(255,183,3,0.2)";
+                ctx.stroke();
+
+                // Draw Text
+                ctx.save();
+                ctx.fillStyle = "#ffffff";
+                ctx.translate(150, 150);
+                ctx.rotate(angle + arc / 2);
+                ctx.textAlign = "right";
+                ctx.font = "bold 11px Tajawal";
+                ctx.fillText(items[i].name, 130, 4);
+                ctx.restore();
+            }
+        }
+
+        function spinWheel() {
+            if (isSpinning || items.length === 0) return;
+            isSpinning = true;
+            const extraRounds = 6 + Math.floor(Math.random() * 4);
+            const randIndex = Math.floor(Math.random() * items.length);
+            const arc = (2 * Math.PI) / items.length;
+            const targetAngle = extraRounds * 2 * Math.PI + (items.length - randIndex - 0.5) * arc;
+
+            let start = null;
+            function animate(timestamp) {
+                if (!start) start = timestamp;
+                let progress = (timestamp - start) / 4500;
+                if (progress < 1) {
+                    currentAngle = (1 - Math.pow(1 - progress, 3)) * targetAngle;
+                    drawWheel();
+                    requestAnimationFrame(animate);
+                } else {
+                    currentAngle = targetAngle % (2 * Math.PI);
+                    drawWheel();
+                    isSpinning = false;
+                    alert("🎉 مبروك! حصلت على: " + items[randIndex].name);
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        function renderRewardsList() {
+            const list = document.getElementById('rewardsList');
+            list.innerHTML = '';
+            items.forEach(item => {
+                const rarity = rarityMap[item.rarity] || rarityMap.common;
+                list.innerHTML += `
+                    <div class="reward-item">
+                        <span class="badge ${rarity.class}">${rarity.text}</span>
+                        <div class="reward-info">
+                            <span class="reward-name">${item.name}</span>
+                            <img src="${item.img}" class="reward-img" alt="${item.name}">
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function openAdmin() {
+            let pass = prompt("أدخل كلمة مرور الأدمن:");
+            if (pass === "1234") {
+                alert("لوحة التحكم: يمكنك تعديل عناصر القائمة من كود الكائن items مباشرةً.");
+            }
+        }
+
+        drawWheel();
+        renderRewardsList();
+    </script>
+</body>
+</html>
