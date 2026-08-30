@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر منصور سامي | التشكيلة الفاخرة</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --primary: #6c5ce7;
+            --secondary: #00b894;
+            --accent: #fdcb6e;
+            --text-main: #2d3436;
+            --text-sub: #636e72;
+            --shadow: 0 10px 20px rgba(0,0,0,0.08);
+            --radius: 16px;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding-bottom: 80px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), #a29bfe);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom-left-radius: 25px;
+            border-bottom-right-radius: 25px;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .header-btns {
+            position: absolute;
+            left: 15px;
+            top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .wheel-section {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--radius);
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin: 15px auto;
+        }
+
+        #wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 5px solid var(--accent);
+            transition: transform 4s cubic-bezier(0.15, 0.99, 0.18, 1);
+            background: conic-gradient(
+                #ff7675 0deg 60deg, 
+                #74b9ff 60deg 120deg, 
+                #55efc4 120deg 180deg, 
+                #ffeaa7 180deg 240deg, 
+                #a29bfe 240deg 300deg, 
+                #fd79a8 300deg 360deg
+            );
+        }
+
+        .arrow {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 20px solid #d63031;
+            z-index: 10;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .btn:disabled {
+            background: #b2bec3;
+            cursor: not-allowed;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 15px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .price {
+            color: var(--secondary);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 8px 0;
+        }
+
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .admin-content {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 450px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .admin-content input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .cart-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 15px;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 90;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-btns">
+            <button class="icon-btn" onclick="toggleTheme()">🌓</button>
+            <button class="icon-btn" onclick="openAdmin()">⚙️ الأدمن</button>
+        </div>
+        <h1>متجر منصور سامي</h1>
+        <p>تسوق أفضل المنتجات مع هدايا حصرية!</p>
+    </header>
+
+    <div class="container">
+        <!-- قسم عجلة الحظ -->
+        <div class="wheel-section">
+            <h2>🎁 عجلة الحظ اليومية</h2>
+            <p>أدر العجلة واحصل على خصم مباشر!</p>
+            <div class="wheel-container">
+                <div class="arrow"></div>
+                <div id="wheel"></div>
+            </div>
+            <button id="spinBtn" class="btn" onclick="spinWheel()">أدر العجلة الآن</button>
+            <p id="wheelResult" style="margin-top:10px; font-weight:bold; color:var(--secondary);"></p>
+        </div>
+
+        <!-- معرض المنتجات -->
+        <h2 style="margin-bottom: 15px;">🛍️ المنتجات المتاحة</h2>
+        <div class="products-grid" id="productsGrid"></div>
+    </div>
+
+    <!-- شريط السلة السفلي -->
+    <div class="cart-bar">
+        <div>
+            <span>إجمالي السلة: </span>
+            <strong id="cartTotal" style="color:var(--primary); font-size:1.2rem;">0$</strong>
+        </div>
+        <button class="btn" style="background:var(--secondary);" onclick="sendOrder()">إرسال الطلب عبر الواتساب 💬</button>
+    </div>
+
+    <!-- لوحة التحكم (الأدمن) -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-content">
+            <h3>⚙️ لوحة إدارة المنتجات</h3>
+            <br>
+            <h4>إضافة منتج جديد:</h4>
+            <input type="text" id="pName" placeholder="اسم المنتج">
+            <input type="number" id="pPrice" placeholder="السعر ($)">
+            <input type="text" id="pImg" placeholder="رابط صورة المنتج">
+            <button class="btn" onclick="addProduct()" style="width:100%; margin-top:10px;">إضافة المنتج</button>
+            <br><br>
+            <h4>المنتجات الحالية:</h4>
+            <div id="adminProductsList"></div>
+            <br>
+            <button class="btn" onclick="closeAdmin()" style="background:#e74c3c; width:100%;">إغلاق</button>
+        </div>
+    </div>
+
+    <script>
+        // المنتجات الافتراضية
+        let products = JSON.parse(localStorage.getItem('products')) || [
+            { id: 1, name: "ساعة ذكية فاخرة", price: 45, img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400" },
+            { id: 2, name: "سماعات لاسلكية", price: 25, img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400" },
+            { id: 3, name: "نظارة شمسية أنيقة", price: 15, img: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400" }
+        ];
+
+        let cart = [];
+        let discount = 0;
+
+        function saveProducts() {
+            localStorage.setItem('products', JSON.stringify(products));
+            renderProducts();
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+            products.forEach(p => {
+                grid.innerHTML += `
+                    <div class="product-card">
+                        <img src="${p.img}" alt="${p.name}">
+                        <h3>${p.name}</h3>
+                        <div class="price">${p.price}$</div>
+                        <button class="btn" onclick="addToCart(${p.price})">إضافة للسلة 🛒</button>
+                    </div>
+                `;
+            });
+        }
+
+        function addToCart(price) {
+            cart.push(price);
+            updateTotal();
+        }
+
+        function updateTotal() {
+            let total = cart.reduce((a, b) => a + b, 0);
+            if (discount > 0) {
+                total = total - (total * (discount / 100));
+            }
+            document.getElementById('cartTotal').innerText = total.toFixed(2) + '$' + (discount > 0 ? ` (خصم ${discount}%)` : '');
+        }
+
+        // عجلة الحظ
+        function spinWheel() {
+            const wheel = document.getElementById('wheel');
+            const btn = document.getElementById('spinBtn');
+            const result = document.getElementById('wheelResult');
+            
+            btn.disabled = true;
+            const randomDegree = Math.floor(Math.random() * 360) + 1440; // 4 دورات كاملة على الأقل
+            wheel.style.transform = `rotate(${randomDegree}deg)`;
+
+            setTimeout(() => {
+                const degrees = randomDegree % 360;
+                // تحديد الجائزة بناءً على زاوية التوقف
+                discount = 10; // خصم افتراضي 10%
+                result.innerText = "مبروك! حصلت على خصم 10% على إجمالي مشترياتك 🎉";
+                updateTotal();
+            }, 4000);
+        }
+
+        // لوحة التحكم
+        function openAdmin() {
+            const pass = prompt("أدخل كلمة مرور الأدمن:");
+            if (pass === "1234") {
+                document.getElementById('adminPanel').style.display = 'flex';
+                renderAdminList();
+            } else {
+                alert("كلمة المرور خاطئة!");
+            }
+        }
+
+        function closeAdmin() {
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+
+        function addProduct() {
+            const name = document.getElementById('pName').value;
+            const price = parseFloat(document.getElementById('pPrice').value);
+            const img = document.getElementById('pImg').value || 'https://via.placeholder.com/150';
+
+            if (name && price) {
+                products.push({ id: Date.now(), name, price, img });
+                saveProducts();
+                document.getElementById('pName').value = '';
+                document.getElementById('pPrice').value = '';
+                document.getElementById('pImg').value = '';
+                renderAdminList();
+            }
+        }
+
+        function deleteProduct(id) {
+            products = products.filter(p => p.id !== id);
+            saveProducts();
+            renderAdminList();
+        }
+
+        function renderAdminList() {
+            const list = document.getElementById('adminProductsList');
+            list.innerHTML = '';
+            products.forEach(p => {
+                list.innerHTML += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin: 8px 0;">
+                        <span>${p.name} - ${p.price}$</span>
+                        <button onclick="deleteProduct(${p.id})" style="background:#e74c3c; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">حذف</button>
+                    </div>
+                `;
+            });
+        }
+
+        // المظهر الداكن
+        function toggleTheme() {
+            const currentTheme = document.body.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                document.body.removeAttribute('data-theme');
+            } else {
+                document.body.setAttribute('data-theme', 'dark');
+            }
+        }
+
+        // إرسال عبر واتساب
+        function sendOrder() {
+            if (cart.length === 0) {
+                alert("السلة فارغة!");
+                return;
+            }
+            const total = document.getElementById('cartTotal').innerText;
+            const message = encodeURIComponent(`مرحباً منصور سامي، أرغب بتأكيد طلبي بقيمة: ${total}`);
+            window.open(`https://wa.me/?text=${message}`, '_blank');
+        }
+
+        // تشغيل أولي
+        renderProducts();
+    </script>
+</body>
+</html>
