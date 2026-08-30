@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر وعجلة منصور سامي</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --secondary: #10b981;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f8fafc;
+            --accent: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding-bottom: 40px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #312e81, #4f46e5);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            position: relative;
+        }
+
+        .admin-btn-top {
+            position: absolute;
+            left: 15px;
+            top: 15px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .main-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        /* تصميم عجلة تشارلز */
+        .charles-wheel-wrapper {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-bottom: 30px;
+            border: 2px solid rgba(255,255,255,0.05);
+            position: relative;
+        }
+
+        .wheel-box {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 20px auto;
+        }
+
+        .pointer {
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 30px solid #ef4444;
+            z-index: 20;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+        }
+
+        canvas#wheelCanvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid #38bdf8;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        }
+
+        .center-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: #ffffff;
+            color: #0f172a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            border: 4px solid #38bdf8;
+            z-index: 10;
+        }
+
+        .spin-action-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .spin-action-btn:disabled {
+            background: #64748b;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* المعرض */
+        .section-title {
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+
+        .price-tag {
+            color: var(--accent);
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+
+        .buy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* النوافذ المنبثقة */
+        .modal {
+            display: none;
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-box {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 450px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid var(--primary);
+        }
+
+        .modal-box input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: white;
+        }
+
+        .item-list-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0f172a;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin: 5px 0;
+        }
+
+        .del-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <button class="admin-btn-top" onclick="openAdmin()">⚙️ الأدمن</button>
+        <h1>🎮 متجر منصور سامي</h1>
+        <p>جرب حظك واستلم جوائزك فوراً!</p>
+    </header>
+
+    <div class="main-container">
+        <!-- عجلة تشارلز -->
+        <div class="charles-wheel-wrapper">
+            <h2>🎡 عجلة الحظ الكبرى</h2>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 5px;">أدر العجلة واحصل على جائزتك</p>
+            
+            <div class="wheel-box">
+                <div class="pointer"></div>
+                <canvas id="wheelCanvas" width="300" height="300"></canvas>
+                <div class="center-btn">حظك</div>
+            </div>
+
+            <button id="spinBtn" class="spin-action-btn" onclick="spin()">أدر العجلة 🚀</button>
+        </div>
+
+        <!-- المنتجات -->
+        <div class="section-title">🛍️ الحسابات والخدمات المتاحة</div>
+        <div class="products-grid" id="productsGrid"></div>
+    </div>
+
+    <!-- نافذة نتيجة العجلة/الطلب -->
+    <div class="modal" id="resultModal">
+        <div class="modal-box" style="text-align: center;">
+            <h3 id="prizeTitle" style="color: var(--accent); margin-bottom: 10px;">🎉 مبروك!</h3>
+            <p id="prizeDesc" style="margin-bottom: 20px;"></p>
+            <button class="buy-btn" style="background: var(--secondary);" onclick="closeModal()">تم الاستلام</button>
+        </div>
+    </div>
+
+    <!-- لوحة الأدمن التحكم الكامل -->
+    <div class="modal" id="adminModal">
+        <div class="modal-box">
+            <h3 style="color: var(--accent); margin-bottom: 15px;">⚙️ لوحة الإدارة الكاملة</h3>
+            
+            <!-- قسم إدارة جوائز العجلة -->
+            <h4 style="margin-top: 10px;">🎁 التحكم بجوائز العجلة:</h4>
+            <div style="display:flex; gap: 5px;">
+                <input type="text" id="prizeInput" placeholder="اسم الجائزة (مثلاً: حساب ببجي)">
+                <button class="buy-btn" style="width: 100px; margin: 8px 0;" onclick="addPrize()">إضافة</button>
+            </div>
+            <div id="prizesAdminList"></div>
+
+            <hr style="border-color: #334155; margin: 20px 0;">
+
+            <!-- قسم إدارة المنتجات -->
+            <h4>🛍️ التحكم بالمنتجات:</h4>
+            <input type="text" id="pName" placeholder="اسم المنتج/الحساب">
+            <input type="number" id="pPrice" placeholder="السعر ($)">
+            <input type="text" id="pImg" placeholder="رابط الصورة">
+            <button class="buy-btn" onclick="addProduct()" style="margin-top: 8px;">إضافة للمتجر</button>
+            <div id="productsAdminList" style="margin-top: 10px;"></div>
+
+            <br>
+            <button class="buy-btn" onclick="closeAdmin()" style="background: #ef4444;">إغلاق الأدمن</button>
+        </div>
+    </div>
+
+    <script>
+        // الألوان الافتراضية لأقسام العجلة
+        const colors = ["#f43f5e", "#8b5cf6", "#06b6d4", "#10b981", "#f59e0b", "#ec4899", "#6366f1", "#14b8a6"];
+
+        // الجوائز المخزنة (يمكنك تعديلها من الأدمن)
+        let prizes = JSON.parse(localStorage.getItem('wheel_prizes')) || [
+            "حساب ببجي", "خصم 25%", "يوزر مميز", "حظاً سعيداً", "خصم 50%", "حساب تلي"
+        ];
+
+        // المنتجات المخزنة
+        let products = JSON.parse(localStorage.getItem('products_list')) || [
+            { id: 1, name: "حساب ببجي مميز", price: 35, img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400" },
+            { id: 2, name: "حساب تليجرام ثلاثي", price: 20, img: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=400" }
+        ];
+
+        const canvas = document.getElementById('wheelCanvas');
+        const ctx = canvas.getContext('2d');
+        let currentAngle = 0;
+        let isSpinning = false;
+
+        // رسم العجلة تلقائياً حسب عدد الجوائز
+        function drawWheel() {
+            const numPrizes = prizes.length;
+            if (numPrizes === 0) return;
+            const arc = Math.PI * 2 / numPrizes;
+            
+            ctx.clearRect(0, 0, 300, 300);
+            for (let i = 0; i < numPrizes; i++) {
+                const angle = currentAngle + i * arc;
+                ctx.beginPath();
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.moveTo(150, 150);
+                ctx.arc(150, 150, 140, angle, angle + arc);
+                ctx.lineTo(150, 150);
+                ctx.fill();
+                ctx.stroke();
+
+                // رسم النص داخل القطاع
+                ctx.save();
+                ctx.fillStyle = "#ffffff";
+                ctx.font = "bold 13px Segoe UI";
+                ctx.translate(150 + Math.cos(angle + arc / 2) * 90, 150 + Math.sin(angle + arc / 2) * 90);
+                ctx.rotate(angle + arc / 2 + Math.PI / 2);
+                ctx.fillText(prizes[i], -ctx.measureText(prizes[i]).width / 2, 0);
+                ctx.restore();
+            }
+        }
+
+        // دوران العجلة
+        function spin() {
+            if (isSpinning || prizes.length === 0) return;
+            isSpinning = true;
+            document.getElementById('spinBtn').disabled = true;
+
+            const numPrizes = prizes.length;
+            const selectedIndex = Math.floor(Math.random() * numPrizes);
+            const degrees = 360 * 5 + (numPrizes - selectedIndex) * (360 / numPrizes) - 90;
+            
+            canvas.style.transform = `rotate(${degrees}deg)`;
+
+            setTimeout(() => {
+                isSpinning = false;
+                document.getElementById('prizeTitle').innerText = "🎉 مبروك الجائزة!";
+                document.getElementById('prizeDesc').innerText = `حصلت على: (${prizes[selectedIndex]})`;
+                document.getElementById('resultModal').style.display = 'flex';
+            }, 4000);
+        }
+
+        // إدارة الجوائز
+        function addPrize() {
+            const val = document.getElementById('prizeInput').value;
+            if (val) {
+                prizes.push(val);
+                localStorage.setItem('wheel_prizes', JSON.stringify(prizes));
+                document.getElementById('prizeInput').value = '';
+                drawWheel();
+                renderPrizesAdmin();
+            }
+        }
+
+        function deletePrize(index) {
+            prizes.splice(index, 1);
+            localStorage.setItem('wheel_prizes', JSON.stringify(prizes));
+            drawWheel();
+            renderPrizesAdmin();
+        }
+
+        function renderPrizesAdmin() {
+            const list = document.getElementById('prizesAdminList');
+            list.innerHTML = '';
+            prizes.forEach((p, idx) => {
+                list.innerHTML += `
+                    <div class="item-list-row">
+                        <span>🎁 ${p}</span>
+                        <button class="del-btn" onclick="deletePrize(${idx})">حذف</button>
+                    </div>
+                `;
+            });
+        }
+
+        // إدارة المنتجات
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+            products.forEach(p => {
+                grid.innerHTML += `
+                    <div class="product-card">
+                        <img src="${p.img}" alt="${p.name}">
+                        <h3>${p.name}</h3>
+                        <div class="price-tag">${p.price}$</div>
+                        <button class="buy-btn" onclick="selectProduct('${p.name}')">حجز / طلب</button>
+                    </div>
+                `;
+            });
+        }
+
+        function selectProduct(name) {
+            document.getElementById('prizeTitle').innerText = "طلب منتج";
+            document.getElementById('prizeDesc').innerText = `تم اختيار: ${name}، يرجى التواصل لإكمال التسليم.`;
+            document.getElementById('resultModal').style.display = 'flex';
+        }
+
+        function addProduct() {
+            const name = document.getElementById('pName').value;
+            const price = document.getElementById('pPrice').value;
+            const img = document.getElementById('pImg').value || 'https://via.placeholder.com/150';
+
+            if(name && price) {
+                products.push({ id: Date.now(), name, price, img });
+                localStorage.setItem('products_list', JSON.stringify(products));
+                renderProducts();
+                renderProductsAdmin();
+                document.getElementById('pName').value = '';
+                document.getElementById('pPrice').value = '';
+                document.getElementById('pImg').value = '';
+            }
+        }
+
+        function deleteProduct(id) {
+            products = products.filter(p => p.id !== id);
+            localStorage.setItem('products_list', JSON.stringify(products));
+            renderProducts();
+            renderProductsAdmin();
+        }
+
+        function renderProductsAdmin() {
+            const list = document.getElementById('productsAdminList');
+            list.innerHTML = '';
+            products.forEach(p => {
+                list.innerHTML += `
+                    <div class="item-list-row">
+                        <span>🛍️ ${p.name} (${p.price}$)</span>
+                        <button class="del-btn" onclick="deleteProduct(${p.id})">حذف</button>
+                    </div>
+                `;
+            });
+        }
+
+        // التحكم بالنوافذ
+        function openAdmin() {
+            const p = prompt("كلمة سر الأدمن:");
+            if (p === "1234") {
+                document.getElementById('adminModal').style.display = 'flex';
+                renderPrizesAdmin();
+                renderProductsAdmin();
+            } else {
+                alert("كلمة المرور خاطئة!");
+            }
+        }
+
+        function closeAdmin() {
+            document.getElementById('adminModal').style.display = 'none';
+        }
+
+        function closeModal() {
+            document.getElementById('resultModal').style.display = 'none';
+        }
+
+        // تشغيل ابتدائي
+        drawWheel();
+        renderProducts();
+    </script>
+</body>
+</html>
+
