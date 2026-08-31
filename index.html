@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر منصور سامي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #090d16;
+            --card-bg: #111827;
+            --card-border: #1f293d;
+            --gold-gradient: linear-gradient(135deg, #f59e0b, #d97706);
+            --gold-light: #fbbf24;
+            --text-main: #ffffff;
+            --text-muted: #9ca3af;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 90px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            padding: 12px;
+        }
+
+        .page-section { display: none; }
+        .page-section.active { display: block; }
+
+        .store-header-banner {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 10px 14px;
+            margin-bottom: 12px;
+        }
+
+        .store-logo-icon {
+            width: 42px;
+            height: 42px;
+            min-width: 42px;
+            min-height: 42px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid var(--gold-light);
+            background: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .store-logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 10px 14px;
+            margin-bottom: 14px;
+        }
+
+        .user-mini-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar-small {
+            width: 40px;
+            height: 40px;
+            background: #1e293b;
+            border: 1.5px solid var(--gold-light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: var(--gold-light);
+        }
+
+        .points-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #0d121d;
+            border: 1px solid var(--card-border);
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-weight: 900;
+            font-size: 14px;
+            color: var(--gold-light);
+        }
+
+        .points-badge span.dot {
+            width: 8px;
+            height: 8px;
+            background: var(--gold-light);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--gold-light);
+        }
+
+        .live-visitors-card {
+            background: linear-gradient(135deg, #111827, #1e1b4b);
+            border: 1px solid #312e81;
+            border-radius: 16px;
+            padding: 12px 16px;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 20px 16px;
+            margin-bottom: 14px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cooldown-banner {
+            background: #111827;
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--gold-light);
+            margin-bottom: 14px;
+        }
+
+        .invite-link-box {
+            background: #0d121d;
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 10px 14px;
+            margin: 14px 0 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .invite-link-text {
+            font-size: 11px;
+            color: var(--text-muted);
+            direction: ltr;
+            text-align: left;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .btn-copy-icon {
+            background: none;
+            border: none;
+            color: var(--gold-light);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .btn-share {
+            width: 100%;
+            background: var(--gold-gradient);
+            color: #111;
+            font-weight: 900;
+            padding: 13px;
+            border-radius: 14px;
+            border: none;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.25);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .stat-box {
+            background: #0d121d;
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 900;
+            color: #fff;
+            margin-top: 4px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .shortcuts-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .shortcut-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 16px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .shortcut-icon { font-size: 24px; color: var(--gold-light); }
+        .shortcut-title { font-size: 12px; font-weight: 800; }
+
+        .wheel-container {
+            position: relative;
+            width: 290px;
+            height: 290px;
+            margin: 15px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle, #2d2311 0%, #111827 80%);
+            border-radius: 50%;
+            border: 5px solid var(--gold-light);
+            box-shadow: 0 0 25px rgba(245, 158, 11, 0.3);
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0; height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 24px solid #f59e0b;
+            z-index: 30;
+        }
+
+        canvas {
+            border-radius: 50%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .spin-center-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 65px;
+            height: 65px;
+            background: var(--gold-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 16px;
+            color: #000;
+            border: 4px solid #fff;
+            z-index: 40;
+            cursor: pointer;
+        }
+
+        .prizes-section-title {
+            font-size: 18px;
+            font-weight: 900;
+            margin-bottom: 12px;
+            text-align: right;
+            color: #fff;
+        }
+
+        .prize-list-item {
+            background: #0d121d;
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .prize-item-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .prize-item-img {
+            width: 36px;
+            height: 36px;
+            background: #1e293b;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .badge-tag {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 8px;
+        }
+        .tag-normal { background: #1f293d; color: var(--text-muted); border: 1px solid #374151; }
+        .tag-rare { background: #1e3a8a; color: #60a5fa; border: 1px solid #2563eb; }
+        .tag-epic { background: #581c87; color: #c084fc; border: 1px solid #7e22ce; }
+        .tag-legendary { background: #78350f; color: #f59e0b; border: 1px solid #d97706; }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .btn-buy {
+            width: 100%;
+            background: var(--gold-gradient);
+            color: #111;
+            border: none;
+            padding: 8px;
+            border-radius: 10px;
+            font-weight: 900;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .admin-bar {
+            background: #111827;
+            border: 1px dashed var(--gold-light);
+            padding: 10px 14px;
+            border-radius: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .btn-admin {
+            background: var(--gold-gradient);
+            color: #000;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-weight: 900;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .modal-bg {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(5, 7, 12, 0.95);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .modal-box {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 20px;
+            width: 100%;
+            max-width: 360px;
+            text-align: center;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-input {
+            width: 100%;
+            background: #0d121d;
+            border: 1px solid var(--card-border);
+            padding: 12px;
+            border-radius: 10px;
+            color: #fff;
+            margin-bottom: 12px;
+            font-family: 'Tajawal', sans-serif;
+            text-align: right;
+            direction: rtl;
+            unicode-bidi: plaintext;
+            font-size: 15px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: #0b0f19;
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0 10px 0;
+            max-width: 480px;
+            margin: 0 auto;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .nav-item.active { color: var(--gold-light); }
+        .nav-item .nav-icon { font-size: 18px; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- لوحة تحكم المالك -->
+        <div class="admin-bar">
+            <span style="font-size: 11px; font-weight: 800;">👑 لوحة تحكم المالك</span>
+            <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                <button class="btn-admin" onclick="requestAdminAction('add')">+ منتج</button>
+                <button class="btn-admin" onclick="requestAdminAction('editWheel')" style="background:#3b82f6; color:#fff;">🎡 تعديل العجلة والنقاط</button>
+                <button class="btn-admin" onclick="requestAdminAction('reset')" style="background:#ef4444; color:#fff;">إعادة ضبط</button>
+            </div>
+        </div>
+
+        <!-- الشعار الدائري الأنيق -->
+        <div class="store-header-banner">
+            <div class="store-logo-icon">
+                <img src="1000121424.jpg" alt="شعار">
+            </div>
+            <div>
+                <div style="font-size: 13px; font-weight: 900; color: #fff;">متجر منصور سامي</div>
+                <div style="font-size: 10px; color: var(--gold-light);">القسم الرسمي لبيع الحسابات 🔥</div>
+            </div>
+        </div>
+
+        <div class="top-bar">
+            <div class="user-mini-info" onclick="openLoginModal()" style="cursor:pointer;">
+                <div class="user-avatar-small" id="userAvatarText">ع</div>
+                <div>
+                    <div style="font-size: 13px; font-weight: 900;" id="displayUserName">زائر كريـم</div>
+                    <div style="font-size: 10px; color: var(--gold-light);" id="userCodeText">اضغط لتسجيل الدخول</div>
+                </div>
+            </div>
+            <div class="points-badge">
+                <span class="dot"></span> <span id="userPointsHeader">0</span> نقطة
+            </div>
+        </div>
+
+        <div class="live-visitors-card">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 18px;">👥</span>
+                <span style="font-size: 12px; font-weight: 800; color: #e2e8f0;">الزوار الكليين للموقع:</span>
+            </div>
+            <span id="totalVisitorsCount" style="font-size: 15px; font-weight: 900; color: var(--gold-light);">0</span>
+        </div>
+
+        <!-- PAGE 1: HOME -->
+        <div id="page-home" class="page-section active">
+            <div class="card" onclick="switchPage('wheel-page', document.querySelectorAll('.nav-item')[2])" style="cursor:pointer; background: linear-gradient(135deg, #111827, #1f1d2b);">
+                <div style="text-align: right;">
+                    <h3 style="font-size: 17px; font-weight: 900; color: #fff; margin-bottom: 4px;">عجلة الحظ الكبرى 🎡</h3>
+                    <p style="font-size: 12px; color: var(--gold-light);">دوران مجاني كل 24 ساعة - اربح نقاط حقيقية بانتظارك 🔥</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div style="font-size: 32px; margin-bottom: 6px;">🪂</div>
+                <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 4px;">ادعُ أصدقاءك واربح النقاط</h3>
+                <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 8px;">كل شخص يسجل من رابطك يمنحك <span style="color: var(--gold-light); font-weight: 800;">50 نقطة</span></p>
+                
+                <div class="invite-link-box">
+                    <button class="btn-copy-icon" onclick="copyInviteLink()" title="نسخ الرابط">📋</button>
+                    <span class="invite-link-text" id="inviteLinkText">https://mansour-store.github.io</span>
+                </div>
+
+                <button class="btn-share" onclick="copyInviteLink()">
+                    <span>🔗</span> مشاركة الرابط
+                </button>
+
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-label">الأصدقاء المدعوون</div>
+                        <div class="stat-value" id="referralCountDisplay">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">النقاط المكتسبة</div>
+                        <div class="stat-value" id="referralPointsDisplay" style="color: var(--gold-light);">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shortcuts-grid">
+                <div class="shortcut-card" onclick="switchPage('orders', document.querySelectorAll('.nav-item')[3])">
+                    <span class="shortcut-icon">📦</span>
+                    <span class="shortcut-title">طلبات الجوائز</span>
+                </div>
+                <div class="shortcut-card" onclick="switchPage('wheel-page', document.querySelectorAll('.nav-item')[2])">
+                    <span class="shortcut-icon">🏆</span>
+                    <span class="shortcut-title">جواتزي</span>
+                </div>
+                <div class="shortcut-card" onclick="switchPage('store', document.querySelectorAll('.nav-item')[1])">
+                    <span class="shortcut-icon">🛒</span>
+                    <span class="shortcut-title">متجر الجوائز</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 2: STORE -->
+        <div id="page-store" class="page-section">
+            <div class="products-grid" id="productsContainer"></div>
+        </div>
+
+        <!-- PAGE 3: WHEEL -->
+        <div id="page-wheel-page" class="page-section">
+            <div class="cooldown-banner" id="cooldownBannerText">
+                ⏳ الوقت المتبقي للدوران القادم: 23:59:48
+            </div>
+
+            <div style="margin-bottom: 14px;">
+                <button onclick="requestAdminAction('editWheel')" style="width: 100%; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #fff; font-weight: 900; padding: 12px; border-radius: 14px; border: none; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);">
+                    <span>⚙️</span> تعديل جوائز ونقاط العجلة (لوحة التحكم)
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="wheel-container">
+                    <div class="wheel-pointer"></div>
+                    <div class="spin-center-btn" onclick="trySpinWheel()">أدر</div>
+                    <canvas id="wheelCanvas" width="280" height="280"></canvas>
+                </div>
+            </div>
+            
+            <div class="card" style="text-align: right;">
+                <h3 class="prizes-section-title">أقسام النقاط الحالية بالعجلة (نسبة الفوز مخصصة للنقاط فقط)</h3>
+                <div id="wheelPrizesListContainer"></div>
+            </div>
+        </div>
+
+        <!-- PAGE 4: ORDERS -->
+        <div id="page-orders" class="page-section">
+            <div class="card" style="text-align: right;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h3 style="font-size: 18px; font-weight: 900;">📦 طلبات الجوائز</h3>
+                    <button class="btn-admin" onclick="requestAdminAction('clearOrders')" style="background:#ef4444; color:#fff;">مسح الكل</button>
+                </div>
+                <div id="allOrdersContainer"></div>
+            </div>
+        </div>
+
+        <!-- PAGE 5: PROFILE -->
+        <div id="page-invite-page" class="page-section">
+            <div class="card" style="text-align: right;">
+                <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 10px;">👤 معلومات الحساب</h3>
+                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 6px;">المستخدم الحالي: <b id="profileNameDisplay" style="color:var(--gold-light)">غير مسجل</b></p>
+                <button onclick="openLoginModal()" style="width:100%; background:var(--gold-gradient); color:#000; border:none; padding:10px; border-radius:10px; font-weight:900; margin-bottom:8px; cursor:pointer;">تغيير الحساب / تسجيل دخول</button>
+                <button onclick="logout()" style="width:100%; background:#ef4444; color:#fff; border:none; padding:10px; border-radius:10px; font-weight:900; cursor:pointer;">تسجيل الخروج</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal-bg" id="passwordModal">
+        <div class="modal-box">
+            <div style="font-size: 32px; margin-bottom: 8px;">🔐</div>
+            <h3 style="color: var(--gold-light); font-size: 17px; font-weight: 900; margin-bottom: 8px;">لوحة تحكم الأدمن</h3>
+            <input type="password" id="adminPasswordInput" class="modal-input" placeholder="كلمة المرور السرية..." style="direction:ltr;">
+            <button onclick="verifyAdminPassword()" style="width:100%; background:var(--gold-gradient); color:#000; font-weight:900; padding:12px; border-radius:10px; border:none; cursor:pointer; margin-bottom:8px;">دخول 🔓</button>
+            <button onclick="closeModal('passwordModal')" style="width:100%; background:#111827; color:#fff; font-weight:900; padding:8px; border-radius:10px; border:1px solid var(--card-border); cursor:pointer;">إلغاء</button>
+        </div>
+    </div>
+
+    <div class="modal-bg" id="loginModal">
+        <div class="modal-box">
+            <div style="font-size: 32px; margin-bottom: 8px;">👤</div>
+            <h2 style="font-size: 17px; font-weight: 900; margin-bottom: 6px;">حساب اللاعب</h2>
+            <p style="color: var(--text-muted); font-size: 12px; margin-bottom: 12px;">أدخل معرف تليجرام الخاص بك (يبدأ بـ @):</p>
+            <input type="text" id="loginUserInput" class="modal-input" placeholder="مثال: @username" style="direction:ltr; text-align:left;">
+            <div style="display: flex; gap: 8px;">
+                <button onclick="verifyLogin()" style="flex:1; background:var(--gold-gradient); color:#000; font-weight:900; padding:11px; border-radius:10px; border:none; cursor:pointer;">حفظ الدخول ✨</button>
+                <button onclick="skipLogin()" style="flex:1; background:#1e293b; color:#fff; font-weight:900; padding:11px; border-radius:10px; border:none; cursor:pointer;">تخطي 🚪</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-bg" id="winnerModal">
+        <div class="modal-box">
+            <div style="font-size: 40px; margin-bottom: 8px;">🎉</div>
+            <h3 style="color: var(--gold-light); font-size: 18px; margin-bottom: 8px;">مبروك ربحت نقاط! 🏆</h3>
+            <p id="winnerText" style="font-size: 15px; font-weight: 900; color: #fff; background: #0d121d; padding: 14px; border-radius: 10px; margin-bottom: 14px;"></p>
+            <button onclick="closeModal('winnerModal')" style="width:100%; background:var(--gold-gradient); color:#000; font-weight:900; padding:11px; border-radius:10px; border:none; cursor:pointer;">موافق ✨</button>
+        </div>
+    </div>
+
+    <div class="modal-bg" id="addProductModal">
+        <div class="modal-box">
+            <div style="font-size: 32px; margin-bottom: 8px;">➕</div>
+            <h3 style="color: var(--gold-light); font-size: 17px; font-weight: 900; margin-bottom: 8px;">إضافة منتج جديد</h3>
+            <input type="text" id="newProdName" class="modal-input" placeholder="اسم المنتج">
+            <input type="number" id="newProdPrice" class="modal-input" placeholder="السعر بالنقاط" style="direction:ltr; text-align:right;">
+            <input type="text" id="newProdDesc" class="modal-input" placeholder="وصف قصير">
+            <button onclick="saveNewProduct()" style="width:100%; background:var(--gold-gradient); color:#000; font-weight:900; padding:12px; border-radius:10px; border:none; cursor:pointer; margin-bottom:8px;">إضافة المنتج 🚀</button>
+            <button onclick="closeModal('addProductModal')" style="width:100%; background:#111827; color:#fff; font-weight:900; padding:8px; border-radius:10px; border:1px solid var(--card-border); cursor:pointer;">إلغاء</button>
+        </div>
+    </div>
+
+    <!-- نافذة تعديل العجلة ونقاطها -->
+    <div class="modal-bg" id="editWheelModal">
+        <div class="modal-box">
+            <div style="font-size: 32px; margin-bottom: 8px;">🎡</div>
+            <h3 style="color: var(--gold-light); font-size: 17px; font-weight: 900; margin-bottom: 8px;">تعديل جوائز ونقاط العجلة</h3>
+            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">اكتب اسم القسم (مثال: 100 نقطة) وكمية النقاط التي سيحصل عليها الفائز فعلياً:</p>
+            <div id="editWheelInputsContainer" style="text-align: right; margin-bottom: 12px;"></div>
+            <button onclick="saveWheelPrizes()" style="width:100%; background:var(--gold-gradient); color:#000; font-weight:900; padding:12px; border-radius:10px; border:none; cursor:pointer; margin-bottom:8px;">حفظ التعديلات 💾</button>
+            <button onclick="closeModal('editWheelModal')" style="width:100%; background:#111827; color:#fff; font-weight:900; padding:8px; border-radius:10px; border:1px solid var(--card-border); cursor:pointer;">إلغاء</button>
+        </div>
+    </div>
+
+    <!-- Bottom Nav -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="switchPage('home', this)">
+            <span class="nav-icon">🏠</span>
+            <span>الرئيسية</span>
+        </button>
+        <button class="nav-item" onclick="switchPage('store', this)">
+            <span class="nav-icon">🛒</span>
+            <span>متجر الجوائز</span>
+        </button>
+        <button class="nav-item" onclick="switchPage('wheel-page', this)">
+            <span class="nav-icon">🎁</span>
+            <span>جواتزي</span>
+        </button>
+        <button class="nav-item" onclick="switchPage('orders', this)">
+            <span class="nav-icon">🔔</span>
+            <span>الإشعارات</span>
+        </button>
+        <button class="nav-item" onclick="switchPage('invite-page', this)">
+            <span class="nav-icon">👤</span>
+            <span>ملف اللاعب</span>
+        </button>
+    </nav>
+
+    <script>
+        const ADMIN_PASSWORD = "an6430087";
+        let pendingAdminAction = null;
+
+        let currentUser = localStorage.getItem('mansour_current_user') || 'زائر كريم';
+        let usersPoints = JSON.parse(localStorage.getItem('mansour_users_points')) || {};
+        let referralsData = JSON.parse(localStorage.getItem('mansour_referrals')) || {};
+        let storeOrders = JSON.parse(localStorage.getItem('mansour_store_orders')) || [];
+        let lastSpinTimes = JSON.parse(localStorage.getItem('mansour_last_spin_times')) || {};
+
+        let totalVisitors = parseInt(localStorage.getItem('mansour_total_visitors')) || 0;
+        if (!sessionStorage.getItem('visited_session')) {
+            totalVisitors += 1;
+            localStorage.setItem('mansour_total_visitors', totalVisitors);
+            sessionStorage.setItem('visited_session', 'true');
+        }
+        document.getElementById('totalVisitorsCount').innerText = totalVisitors.toLocaleString();
+
+        // جعل كل أقسام العجلة تعتمد حصرياً على النقاط برصيد وزناً حقيقياً (نسبة فوز 100% للنقاط)
+        let defaultPrizes = [
+            { name: "50 نقطة", icon: "🪙", tag: "نقاط", tagClass: "tag-normal", isReal: true, points: 50 },
+            { name: "100 نقطة", icon: "💯", tag: "نقاط", tagClass: "tag-rare", isReal: true, points: 100 },
+            { name: "150 نقطة", icon: "🔥", tag: "نقاط", tagClass: "tag-epic", isReal: true, points: 150 },
+            { name: "200 نقطة", icon: "🎁", tag: "نقاط", tagClass: "tag-normal", isReal: true, points: 200 },
+            { name: "250 نقطة", icon: "💎", tag: "نقاط", tagClass: "tag-rare", isReal: true, points: 250 },
+            { name: "300 نقطة", icon: "⭐", tag: "نقاط", tagClass: "tag-epic", isReal: true, points: 300 },
+            { name: "400 نقطة", icon: "👑", tag: "نقاط", tagClass: "tag-legendary", isReal: true, points: 400 },
+            { name: "500 نقطة", icon: "🚀", tag: "نقاط", tagClass: "tag-legendary", isReal: true, points: 500 }
+        ];
+
+        let prizes = JSON.parse(localStorage.getItem('mansour_wheel_prizes')) || defaultPrizes;
+
+        let defaultProducts = [
+            { name: "رشق انستغرام 1k", price: 1000, stock: 66, icon: "📸", desc: "1000 متابع لحسابك" },
+            { name: "1000 شدة ببجي", price: 5000, stock: 262, icon: "💎", desc: "شحن شدات مباشرة" }
+        ];
+
+        let products = JSON.parse(localStorage.getItem('mansour_products')) || defaultProducts;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refUser = urlParams.get('ref');
+            if (refUser) { localStorage.setItem('mansour_ref_owner', refUser); }
+
+            updateUserUI();
+            updateReferralUI();
+            renderStore();
+            renderWheelPrizesList();
+            renderOrders();
+            drawWheel();
+            startCountdownTimer();
+        });
+
+        function saveData() {
+            localStorage.setItem('mansour_products', JSON.stringify(products));
+            localStorage.setItem('mansour_wheel_prizes', JSON.stringify(prizes));
+            localStorage.setItem('mansour_users_points', JSON.stringify(usersPoints));
+            localStorage.setItem('mansour_referrals', JSON.stringify(referralsData));
+            localStorage.setItem('mansour_store_orders', JSON.stringify(storeOrders));
+            localStorage.setItem('mansour_last_spin_times', JSON.stringify(lastSpinTimes));
+        }
+
+        function requestAdminAction(actionType) {
+            pendingAdminAction = actionType;
+            document.getElementById('adminPasswordInput').value = '';
+            document.getElementById('passwordModal').style.display = 'flex';
+            setTimeout(() => {
+                document.getElementById('adminPasswordInput').focus();
+            }, 100);
+        }
+
+        function verifyAdminPassword() {
+            let enteredPass = document.getElementById('adminPasswordInput').value.trim();
+            if (enteredPass === ADMIN_PASSWORD) {
+                closeModal('passwordModal');
+                if (pendingAdminAction === 'add') {
+                    document.getElementById('addProductModal').style.display = 'flex';
+                } else if (pendingAdminAction === 'editWheel') {
+                    openEditWheelModal();
+                } else if (pendingAdminAction === 'reset') {
+                    resetDefaults();
+                } else if (pendingAdminAction === 'clearOrders') {
+                    clearOrders();
+                }
+            } else {
+                alert('كلمة المرور غير صحيحة!');
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function openEditWheelModal() {
+            let container = document.getElementById('editWheelInputsContainer');
+            container.innerHTML = '';
+            prizes.forEach((p, index) => {
+                container.innerHTML += `
+                    <div style="margin-bottom: 10px; background:#0d121d; padding:8px; border-radius:10px; border:1px solid var(--card-border);">
+                        <label style="font-size:11px; color:var(--gold-light); font-weight:800;">القسم ${index + 1}:</label>
+                        <input type="text" id="wheelPrizeInput_${index}" class="modal-input" value="${p.name}" placeholder="اسم الجائزة (مثال: 100 نقطة)" style="margin-bottom:4px; padding:6px; font-size:12px;">
+                        <input type="number" id="wheelPointsInput_${index}" class="modal-input" value="${p.points || 0}" placeholder="عدد النقاط المضافة للرصيد" style="margin-bottom:0; padding:6px; font-size:12px; direction:ltr; text-align:right;">
+                    </div>
+                `;
+            });
+            document.getElementById('editWheelModal').style.display = 'flex';
+        }
+
+        function saveWheelPrizes() {
+            for (let i = 0; i < prizes.length; i++) {
+                let nameVal = document.getElementById(`wheelPrizeInput_${i}`).value.trim();
+                let ptsVal = parseInt(document.getElementById(`wheelPointsInput_${i}`).value);
+                if (nameVal) { prizes[i].name = nameVal; }
+                if (!isNaN(ptsVal)) { 
+                    prizes[i].points = ptsVal;
+                    prizes[i].isReal = true; // ضمان أن كل الأقسام تفوز بنقاط حقيقية حصرياً
+                }
+            }
+            saveData();
+            drawWheel();
+            renderWheelPrizesList();
+            closeModal('editWheelModal');
+            alert('تم تحديث جوائز ونقاط العجلة بنجاح! ✨');
+        }
+
+        function saveNewProduct() {
+            let name = document.getElementById('newProdName').value.trim();
+            let price = parseInt(document.getElementById('newProdPrice').value);
+            let desc = document.getElementById('newProdDesc').value.trim() || 'منتج مميز';
+
+            if (!name || isNaN(price)) {
+                alert('يرجى كتابة اسم المنتج والسعر بشكل صحيح!');
+                return;
+            }
+
+            products.push({ name: name, price: price, stock: 100, icon: "🎁", desc: desc });
+            saveData();
+            renderStore();
+            closeModal('addProductModal');
+            alert('تمت إضافة المنتج بنجاح! ✨');
+        }
+
+        function verifyLogin() {
+            let inputVal = document.getElementById('loginUserInput').value.trim();
+            if (!inputVal) { alert('يرجى كتابة معرف تليجرام!'); return; }
+            currentUser = inputVal;
+            localStorage.setItem('mansour_current_user', currentUser);
+            if (usersPoints[currentUser] === undefined) usersPoints[currentUser] = 315;
+            saveData();
+            closeModal('loginModal');
+            updateUserUI();
+            updateReferralUI();
+        }
+
+        function skipLogin() {
+            closeModal('loginModal');
+        }
+
+        function updateUserUI() {
+            if (currentUser) {
+                document.getElementById('displayUserName').innerText = currentUser;
+                document.getElementById('profileNameDisplay').innerText = currentUser;
+                document.getElementById('userAvatarText').innerText = currentUser !== 'زائر كريم' ? currentUser.charAt(0).toUpperCase() : 'ز';
+                let currentPts = usersPoints[currentUser] !== undefined ? usersPoints[currentUser] : (currentUser !== 'زائر كريم' ? 315 : 0);
+                document.getElementById('userPointsHeader').innerText = currentPts;
+            }
+        }
+
+        function updateReferralUI() {
+            let count = 0;
+            let earnedPoints = 0;
+            let activeUser = (currentUser !== 'زائر كريم') ? currentUser : 'منصور_سامي';
+            if (referralsData[activeUser]) {
+                count = referralsData[activeUser].count || 0;
+                earnedPoints = referralsData[activeUser].points || 0;
+            }
+            document.getElementById('referralCountDisplay').innerText = count;
+            document.getElementById('referralPointsDisplay').innerText = earnedPoints;
+            
+            let baseUrl = window.location.origin + window.location.pathname;
+            document.getElementById('inviteLinkText').innerText = `${baseUrl}?ref=${encodeURIComponent(activeUser)}`;
+        }
+
+        function updatePoints(amount) {
+            if (currentUser === 'زائر كريم') { openLoginModal(); return; }
+            if (usersPoints[currentUser] === undefined) usersPoints[currentUser] = 315;
+            usersPoints[currentUser] += amount;
+            document.getElementById('userPointsHeader').innerText = usersPoints[currentUser];
+            saveData();
+        }
+
+        function resetDefaults() {
+            if(confirm('إعادة ضبط المتجر والعجلة للافتراضي؟')) {
+                products = [...defaultProducts];
+                prizes = [...defaultPrizes];
+                saveData();
+                renderStore();
+                drawWheel();
+                renderWheelPrizesList();
+                alert('تمت الإعادة بنجاح!');
+            }
+        }
+
+        function renderStore() {
+            let container = document.getElementById('productsContainer');
+            container.innerHTML = '';
+            products.forEach(p => {
+                container.innerHTML += `
+                    <div class="product-card">
+                        <div>
+                            <div style="font-size: 24px; margin-bottom: 6px;">${p.icon || '🎁'}</div>
+                            <div style="font-size: 13px; font-weight: 900; margin-bottom: 2px;">${p.name}</div>
+                            <div style="font-size: 10px; color: var(--text-muted); margin-bottom: 6px;">${p.desc}</div>
+                        </div>
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 6px;">
+                                <span style="color: var(--gold-light); font-weight: 900;">${p.price} نقطة</span>
+                                <span style="color: var(--text-muted);">متبقي ${p.stock}</span>
+                            </div>
+                            <button class="btn-buy" onclick="buyItem('${p.name}', ${p.price})">شراء</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderWheelPrizesList() {
+            let container = document.getElementById('wheelPrizesListContainer');
+            container.innerHTML = '';
+            prizes.forEach(p => {
+                container.innerHTML += `
+                    <div class="prize-list-item">
+                        <div class="prize-item-info">
+                            <div class="prize-item-img">${p.icon || '🪙'}</div>
+                            <span style="font-size: 13px; font-weight: 800; color: #fff;">${p.name} <span style="color:var(--gold-light); font-size:11px;">(${p.points || 0} نقطة رصيد)</span></span>
+                        </div>
+                        <span class="badge-tag ${p.tagClass}">${p.tag}</span>
+                    </div>
+                `;
+            });
+        }
+
+        function renderOrders() {
+            let container = document.getElementById('allOrdersContainer');
+            if (storeOrders.length === 0) {
+                container.innerHTML = `<p style="text-align:center; color:var(--text-muted); font-size:12px; padding:15px;">لا توجد طلبات جديدة حالياً.</p>`;
+                return;
+            }
+            container.innerHTML = '';
+            storeOrders.forEach((order) => {
+                container.innerHTML += `
+                    <div style="background:#0d121d; border:1px solid var(--card-border); border-radius:12px; padding:10px; margin-bottom:8px;">
+                        <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:900; color:var(--gold-light);">
+                            <span>📦 ${order.product}</span>
+                            <span style="font-size:10px; color:var(--text-muted);">${order.date}</span>
+                        </div>
+                        <div style="font-size:12px; color:#fff; margin-top:4px;">👤 المستخدم: <b>${order.user}</b></div>
+                    </div>
+                `;
+            });
+        }
+
+        function clearOrders() {
+            if (confirm('مسح جميع الطلبات؟')) {
+                storeOrders = [];
+                saveData();
+                renderOrders();
+            }
+        }
+
+        function switchPage(pageId, btn) {
+            document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+            if(pageId === 'orders') renderOrders();
+        }
+
+        const wheelColors = ['#1e293b', '#0f172a', '#334155', '#1e293b', '#0f172a', '#334155', '#1e293b', '#0f172a'];
+        const canvas = document.getElementById('wheelCanvas');
+        const ctx = canvas.getContext('2d');
+        let currentAngle = 0;
+        let isSpinning = false;
+
+        function drawWheel() {
+            const num = prizes.length;
+            ctx.clearRect(0, 0, 280, 280);
+            const arc = (2 * Math.PI) / num;
+            for (let i = 0; i < num; i++) {
+                const angle = i * arc + currentAngle;
+                ctx.beginPath();
+                ctx.fillStyle = wheelColors[i % wheelColors.length];
+                ctx.moveTo(140, 140);
+                ctx.arc(140, 140, 135, angle, angle + arc);
+                ctx.lineTo(140, 140);
+                ctx.fill();
+                ctx.strokeStyle = '#d97706';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                ctx.save();
+                ctx.fillStyle = "#fff";
+                ctx.translate(140, 140);
+                ctx.rotate(angle + arc / 2);
+                ctx.textAlign = "center";
+                ctx.font = "bold 11px Tajawal";
+                ctx.fillText(prizes[i].name, 72, 4);
+                ctx.restore();
+            }
+        }
+
+        function trySpinWheel() {
+            if (currentUser === 'زائر كريم') { openLoginModal(); return; }
+            let now = Date.now();
+            let lastSpin = lastSpinTimes[currentUser] || 0;
+            if (now - lastSpin < 24 * 60 * 60 * 1000) {
+                alert(`عذراً! يمكنك تدوير العجلة مرة واحدة كل 24 ساعة.`);
+                return;
+            }
+            spinWheel();
+        }
+
+        function spinWheel() {
+            if (isSpinning) return;
+            isSpinning = true;
+            lastSpinTimes[currentUser] = Date.now();
+            saveData();
+
+            // اختيار قسم عشوائي من العجلة (جميعها نقاط بنسبة حظ صحيحة 100%)
+            let winningIndex = Math.floor(Math.random() * prizes.length);
+            const targetAngle = 8 * 2 * Math.PI + (3 * Math.PI / 2) - (winningIndex + 0.5) * ((2 * Math.PI) / prizes.length);
+            
+            let start = null;
+            function animate(ts) {
+                if (!start) start = ts;
+                let progress = (ts - start) / 4000;
+                if (progress < 1) {
+                    currentAngle = (1 - Math.pow(1 - progress, 3)) * targetAngle;
+                    drawWheel();
+                    requestAnimationFrame(animate);
+                } else {
+                    currentAngle = targetAngle % (2 * Math.PI);
+                    drawWheel();
+                    isSpinning = false;
+                    let wonPrizeObj = prizes[winningIndex];
+                    
+                    // إضافة النقاط لرصيد المستخدم فوراً
+                    let addPts = wonPrizeObj.points || 50;
+                    updatePoints(addPts);
+
+                    document.getElementById('winnerText').innerText = `🎁 ربحت ${wonPrizeObj.name} تمت إضافتها لرصيدك!`;
+                    document.getElementById('winnerModal').style.display = 'flex';
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        function startCountdownTimer() {
+            setInterval(() => {
+                if (currentUser === 'زائر كريم') return;
+                let remaining = (24 * 60 * 60 * 1000) - (Date.now() - (lastSpinTimes[currentUser] || 0));
+                if (remaining > 0) {
+                    let h = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    let m = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                    let s = Math.floor((remaining % (1000 * 60)) / 1000);
+                    document.getElementById('cooldownBannerText').innerText = `⏳ الوقت المتبقي: ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+                } else {
+                    document.getElementById('cooldownBannerText').innerText = `🎉 العجلة جاهزة للتدوير الآن!`;
+                }
+            }, 1000);
+        }
+
+        function openLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
+        function logout() { localStorage.removeItem('mansour_current_user'); location.reload(); }
+        function copyInviteLink() {
+            navigator.clipboard.writeText(document.getElementById('inviteLinkText').innerText);
+            alert('تم نسخ الرابط بنجاح!');
+        }
+
+        function buyItem(name, price) {
+            if (currentUser === 'زائر كريم') { openLoginModal(); return; }
+            let currentPts = usersPoints[currentUser] !== undefined ? usersPoints[currentUser] : 0;
+            if (currentPts < price) { alert('رصيدك من النقاط غير كافي!'); return; }
+            
+            updatePoints(-price);
+            let now = new Date();
+            storeOrders.unshift({ user: currentUser, product: name, date: `${now.getHours()}:${now.getMinutes()} - ${now.getDate()}/${now.getMonth()+1}` });
+            saveData();
+            renderOrders();
+            alert(`تم شراء ${name} بنجاح!`);
+        }
+    </script>
+</body>
+</html>
