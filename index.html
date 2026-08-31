@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>متجر علاء الشمري - عجلة الحظ</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #0d1117;
+      color: #ffffff;
+      text-align: center;
+      padding: 20px;
+    }
+    .card {
+      background-color: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 400px;
+      margin: auto;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .btn {
+      background-color: #238636;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 15px;
+    }
+    .btn:disabled {
+      background-color: #383e47;
+      cursor: not-allowed;
+      color: #8b949e;
+    }
+    .btn-google {
+      background-color: #4285f4;
+    }
+    .points-badge {
+      background-color: #1f6feb;
+      padding: 8px 15px;
+      border-radius: 20px;
+      display: inline-block;
+      margin: 10px 0;
+      font-weight: bold;
+    }
+    #userInfo {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>🎡 عجلة الحظ اليومية</h2>
+
+    <!-- قسم تسجيل الدخول -->
+    <div id="loginSection">
+      <p>يرجى تسجيل الدخول لحفظ نقاطك وتدوير العجلة</p>
+      <button class="btn btn-google" onclick="loginWithGoogle()">تسجيل الدخول عبر Google</button>
+    </div>
+
+    <!-- قسم العضو بعد تسجيل الدخول -->
+    <div id="userInfo">
+      <p>أهلاً بك، <b id="userName"></b></p>
+      <div class="points-badge">النقاط: <span id="userPoints">0</span></div>
+      
+      <div style="margin: 20px 0; font-size: 50px;">🎯</div>
+      
+      <button id="spinBtn" class="btn" onclick="spinWheel()">تدوير العجلة</button>
+      <button class="btn" style="background-color: #da3633; margin-top: 10px;" onclick="logout()">تسجيل الخروج</button>
+    </div>
+  </div>
+
+  <!-- استدعاء Firebase SDK v10 -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // ⚠️ استبدل هذه البيانات ببيانات مشروعك من Firebase Console
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // تهيئة Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    let currentUser = null;
+
+    // مراقبة حالة تسجيل الدخول
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        currentUser = user;
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("userInfo").style.display = "block";
+        document.getElementById("userName").innerText = user.displayName;
+        
+        await loadUserData(user);
+      } else {
+        currentUser = null;
+        document.getElementById("loginSection").style.display = "block";
+        document.getElementById("userInfo").style.display = "none";
+      }
+    });
+
+    // تسجيل الدخول عبر Google
+    window.loginWithGoogle = async function() {
+      try {
+        await signInWithPopup(auth, provider);
+      } catch (error) {
+        alert("فشل تسجيل الدخول: " + error.message);
+      }
+    };
+
+    // تسجيل الخروج
+    window.logout = function() {
+      signOut(auth);
+    };
+
+    // جلب/إنشاء بيانات العضو في Firestore
+    async function loadUserData(user) {
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+      const today = new Date().toISOString().split('T')[0];
+
+      if (!userSnap.exists()) {
+        // عضو جديد
+        await setDoc(userRef, {
+          name: user.displayName,
+          email: user.email,
+          points: 0,
+          lastSpinDate: ""
+        });
+        updateUI(0, false);
+      } else {
+        // عضو مسجل سابقاً
+        const data = userSnap.data();
+        const hasSpunToday = (data.lastSpinDate === today);
+        updateUI(data.points, hasSpunToday);
+      }
+    }
+
+    // تدوير العجلة وحفظ النقاط
+    window.spinWheel = async function() {
+      if (!currentUser) return;
+
+      const userRef = doc(db, "users", currentUser.uid);
+      const userSnap = await getDoc(userRef);
+      const data = userSnap.data();
+      const today = new Date().toISOString().split('T')[0];
+
+      // حماية سيرفر: التحقق من تاريخ اليوم قبل التدوير
+      if (data.lastSpinDate === today) {
+        alert("لقد قمت بالتدوير اليوم بالفعل! عد غداً.");
+        return;
+      }
+
+      // إضافة النقاط (يمكن تغيير القائمة عشوائياً)
+      const wonPoints = 60; 
+
+      await updateDoc(userRef, {
+        points: increment(wonPoints),
+        lastSpinDate: today
+      });
+
+      alert(`مبروك! حصلت على ${wonPoints} نقطة.`);
+      loadUserData(currentUser);
+    };
+
+    // تحديث عناصر الصفحة
+    function updateUI(points, hasSpunToday) {
+      document.getElementById("userPoints").innerText = points;
+      const spinBtn = document.getElementById("spinBtn");
+      
+      if (hasSpunToday) {
+        spinBtn.disabled = true;
+        spinBtn.innerText = "تم التدوير اليوم ❌ (عد غداً)";
+      } else {
+        spinBtn.disabled = false;
+        spinBtn.innerText = "تدوير العجلة 🎡";
+      }
+    }
+  </script>
+</body>
+</html>
