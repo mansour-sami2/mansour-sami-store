@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>عجلة الجوائز</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: #0d1117;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 10px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #f0f6fc;
+      font-size: 1.3rem;
+    }
+
+    /* حاوية العجلة */
+    .wheel-container {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      margin-bottom: 25px;
+    }
+
+    .pointer {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-top: 25px solid #ff4757;
+      z-index: 10;
+    }
+
+    #wheelCanvas {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+      transition: transform 4s cubic-bezier(0.15, 0.99, 0.35, 1);
+    }
+
+    button.spin-btn {
+      background: linear-gradient(135deg, #ff4757, #ff6b81);
+      color: white;
+      border: none;
+      padding: 12px 35px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-radius: 25px;
+      cursor: pointer;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+    }
+
+    button.spin-btn:disabled {
+      background: #555;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* قائمة الجوائز */
+    .prizes-list {
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .prize-item {
+      background-color: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 12px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .normal { color: #8b949e; border-color: #30363d; }
+    .epic { color: #a371f7; border-color: #8957e5; }
+    .legendary { color: #f1e05a; border-color: #d29922; }
+
+    /* نافذة النتيجة */
+    .result-msg {
+      margin-top: 15px;
+      font-size: 1.1rem;
+      color: #2ed573;
+      font-weight: bold;
+      height: 25px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>جوائز العجلة</h2>
+
+  <div class="wheel-container">
+    <div class="pointer"></div>
+    <canvas id="wheelCanvas" width="300" height="300"></canvas>
+  </div>
+
+  <button class="spin-btn" id="spinBtn" onclick="spin()">تدوير العجلة</button>
+  <div class="result-msg" id="resultMsg"></div>
+
+  <!-- القائمة -->
+  <div class="prizes-list" id="prizesContainer"></div>
+
+  <script>
+    // قائمة الجوائز المعروضة (نسبة الربح فقط على النقاط 5، 10، 15)
+    const items = [
+      { label: "100 الف دينار", type: "عادية", chance: 0 },
+      { label: "1000 شده ببجي", type: "عادية", chance: 0 },
+      { label: "5 نقاط", type: "نادرة", chance: 50 },
+      { label: "حساب تيك توك", type: "ملحمية", chance: 0 },
+      { label: "10 نقاط", type: "نادرة", chance: 35 },
+      { label: "كارت سيارة 200$", type: "ملحمية", chance: 0 },
+      { label: "15 نقطة", type: "نادرة", chance: 15 },
+      { label: "حساب ببجي 150$", type: "أسطورية", chance: 0 },
+      { label: "رويال باس", type: "عادية", chance: 0 }
+    ];
+
+    const canvas = document.getElementById('wheelCanvas');
+    const ctx = canvas.getContext('2d');
+    const spinBtn = document.getElementById('spinBtn');
+    const resultMsg = document.getElementById('resultMsg');
+    
+    const numSegments = items.length;
+    const arcSize = (2 * Math.PI) / numSegments;
+    let currentRotation = 0;
+
+    // رسم العجلة
+    function drawWheel() {
+      const radius = canvas.width / 2;
+      const colors = ["#1e293b", "#0f172a", "#334155", "#1e293b", "#0f172a", "#334155", "#1e293b", "#0f172a", "#334155"];
+
+      for (let i = 0; i < numSegments; i++) {
+        const angle = i * arcSize;
+        ctx.beginPath();
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.moveTo(radius, radius);
+        ctx.arc(radius, radius, radius, angle, angle + arcSize);
+        ctx.lineTo(radius, radius);
+        ctx.fill();
+        ctx.strokeStyle = "#0d1117";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // كتابة النصوص
+        ctx.save();
+        ctx.translate(radius, radius);
+        ctx.rotate(angle + arcSize / 2);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 11px sans-serif";
+        ctx.fillText(items[i].label, radius - 15, 4);
+        ctx.restore();
+      }
+    }
+
+    // عرض القائمة أسفل العجلة
+    function renderList() {
+      const container = document.getElementById('prizesContainer');
+      items.forEach(item => {
+        let badgeClass = "normal";
+        if (item.type === "ملحمية") badgeClass = "epic";
+        if (item.type === "أسطورية") badgeClass = "legendary";
+
+        container.innerHTML += `
+          <div class="prize-item">
+            <span>${item.label}</span>
+            <span class="badge ${badgeClass}">${item.type}</span>
+          </div>
+        `;
+      });
+    }
+
+    // تحديد الجائزة الفائزة (من المحصورة فقط)
+    function getWinningIndex() {
+      const validIndexes = items
+        .map((item, index) => ({ index, chance: item.chance }))
+        .filter(item => item.chance > 0);
+
+      const totalChance = validIndexes.reduce((sum, item) => sum + item.chance, 0);
+      let rand = Math.random() * totalChance;
+
+      for (let item of validIndexes) {
+        if (rand < item.chance) {
+          return item.index;
+        }
+        rand -= item.chance;
+      }
+      return validIndexes[0].index;
+    }
+
+    // تشغيل العجلة
+    function spin() {
+      spinBtn.disabled = true;
+      resultMsg.innerText = "";
+
+      const targetIndex = getWinningIndex();
+      
+      // حساب الزاوية المطلوبة للتوقف عند الجائزة الفائزة
+      const segmentAngle = 360 / numSegments;
+      const targetAngleDegree = 360 - (targetIndex * segmentAngle + segmentAngle / 2) - 90;
+      const fullRotations = 5 * 360; // 5 دورات كاملة للتأثير
+      
+      const finalAngle = fullRotations + targetAngleDegree;
+      currentRotation += finalAngle;
+
+      canvas.style.transform = `rotate(${currentRotation}deg)`;
+
+      setTimeout(() => {
+        spinBtn.disabled = false;
+        resultMsg.innerText = `مبروك! حصلت على: ${items[targetIndex].label}`;
+      }, 4000);
+    }
+
+    drawWheel();
+    renderList();
+  </script>
+</body>
+</html>
