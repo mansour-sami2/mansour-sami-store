@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر منصور سامي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0b0e14;
+            --card-bg: #121824;
+            --card-border: #1e2638;
+            --gold-main: #f59e0b;
+            --gold-light: #fbbf24;
+            --text-main: #ffffff;
+            --text-muted: #9ca3af;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 90px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            padding: 14px;
+        }
+
+        /* الهيدر العلوي */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .points-pill {
+            background: #101622;
+            border: 1px solid var(--gold-main);
+            border-radius: 12px;
+            padding: 6px 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 900;
+            font-size: 15px;
+            color: var(--gold-light);
+        }
+
+        .points-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--gold-main);
+            border-radius: 50%;
+        }
+
+        .brand-title-box {
+            text-align: left;
+        }
+
+        .brand-title-main {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--gold-light);
+            line-height: 1.1;
+        }
+
+        .brand-title-sub {
+            font-size: 10px;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        /* كرت العضوية */
+        .user-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .user-card-points {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--gold-light);
+            line-height: 1;
+        }
+
+        .user-card-points-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .user-card-info {
+            text-align: right;
+            flex-grow: 1;
+            margin-right: 14px;
+        }
+
+        .user-card-name {
+            font-size: 18px;
+            font-weight: 900;
+            color: #fff;
+        }
+
+        .user-card-code {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .user-card-avatar {
+            width: 50px;
+            height: 50px;
+            background: #5b67ca;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 900;
+            color: #fff;
+        }
+
+        /* كرت عجلة الحظ */
+        .wheel-banner {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            cursor: pointer;
+        }
+
+        .wheel-banner-right h3 {
+            font-size: 20px;
+            font-weight: 900;
+            color: #fff;
+        }
+
+        .wheel-banner-right p {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .wheel-timer {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--gold-light);
+            margin-top: 6px;
+        }
+
+        .wheel-icon-graphic {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #f59e0b 0deg 45deg, #111827 45deg 90deg, 
+                #f59e0b 90deg 135deg, #111827 135deg 180deg,
+                #f59e0b 180deg 225deg, #111827 225deg 270deg,
+                #f59e0b 270deg 315deg, #111827 315deg 360deg
+            );
+            border: 3px solid var(--gold-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
+        }
+
+        .wheel-icon-center {
+            width: 30px;
+            height: 30px;
+            background: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 900;
+        }
+
+        /* كرت الدعوات والمشاركة */
+        .share-banner {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .share-banner-text h4 {
+            font-size: 16px;
+            font-weight: 900;
+            color: #fff;
+        }
+
+        .share-banner-text p {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+
+        .share-banner-text span {
+            color: var(--gold-light);
+            font-weight: 900;
+        }
+
+        .share-icon-img {
+            font-size: 32px;
+        }
+
+        /* شبكة الأزرار 6 خيارات */
+        .grid-menu {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .grid-item {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 14px 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .grid-item:active {
+            transform: scale(0.96);
+        }
+
+        .grid-item-icon {
+            font-size: 22px;
+            color: var(--gold-light);
+        }
+
+        .grid-item-label {
+            font-size: 12px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        /* زر التثبيت السفلي */
+        .pwa-banner-btn {
+            background: #064e3b;
+            border: 1px solid #10b981;
+            border-radius: 14px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #34d399;
+            font-weight: 900;
+            font-size: 13px;
+        }
+
+        /* شريط التنقل السفلي */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: #090c12;
+            border-top: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0 10px 0;
+            max-width: 480px;
+            margin: 0 auto;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .nav-item.active { color: var(--gold-light); }
+        .nav-item .nav-icon { font-size: 18px; }
+
+        .page-section { display: none; }
+        .page-section.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- الهيدر العلوي -->
+        <div class="top-header">
+            <div class="points-pill">
+                <div class="points-dot"></div>
+                <span id="headerPoints">250</span> نقطة
+            </div>
+            <div class="brand-title-box">
+                <div class="brand-title-main">متجر منصور سامي</div>
+                <div class="brand-title-sub">MANSOUR SAMI</div>
+            </div>
+        </div>
+
+        <!-- الصفحة الرئيسية -->
+        <div id="page-home" class="page-section active">
+            
+            <!-- كرت العضو -->
+            <div class="user-card">
+                <div>
+                    <div class="user-card-points" id="userCardPoints">250</div>
+                    <div class="user-card-points-label">النقاط</div>
+                </div>
+                <div class="user-card-info">
+                    <div class="user-card-name">Anoo Tektok</div>
+                    <div class="user-card-code">كود الدعوة: 1A7E9E</div>
+                </div>
+                <div class="user-card-avatar">A</div>
+            </div>
+
+            <!-- عجلة الحظ -->
+            <div class="wheel-banner" onclick="handleWheelClick()">
+                <div class="wheel-banner-right">
+                    <h3>عجلة الحظ</h3>
+                    <p>دوران مجاني كل 24 ساعة</p>
+                    <div class="wheel-timer" id="wheelTimer">23:59:59</div>
+                </div>
+                <div class="wheel-icon-graphic">
+                    <div class="wheel-icon-center">أدر</div>
+                </div>
+            </div>
+
+            <!-- مشاركة التطبيق -->
+            <div class="share-banner">
+                <div class="share-banner-text">
+                    <h4>اجمع النقاط بمشاركة التطبيق</h4>
+                    <p>كل صديق يسجّل من رابطك يمنحك <span>60 نقطة</span><br>تشتري بها من المتجر</p>
+                </div>
+                <div class="share-icon-img">🪂</div>
+            </div>
+
+            <!-- قائمة الخيارات الستة -->
+            <div class="grid-menu">
+                <div class="grid-item" onclick="switchPage('store')">
+                    <div class="grid-item-icon">🛒</div>
+                    <div class="grid-item-label">متجر الجوائز</div>
+                </div>
+                <div class="grid-item" onclick="switchPage('prizes')">
+                    <div class="grid-item-icon">📦</div>
+                    <div class="grid-item-label">جوائزي</div>
+                </div>
+                <div class="grid-item" onclick="alert('رابط الدعوة الخاص بك: https://mansour-sami2.github.io/?ref=1A7E9E')">
+                    <div class="grid-item-icon">👥</div>
+                    <div class="grid-item-label">ادعُ أصدقاءك</div>
+                </div>
+                <div class="grid-item" onclick="alert('قسم صناع المحتوى قريباً')">
+                    <div class="grid-item-icon">🎥</div>
+                    <div class="grid-item-label">صناع المحتوى</div>
+                </div>
+                <div class="grid-item" onclick="switchPage('notifications')">
+                    <div class="grid-item-icon">🔔</div>
+                    <div class="grid-item-label">الإشعارات</div>
+                </div>
+                <div class="grid-item" onclick="switchPage('profile')">
+                    <div class="grid-item-icon">👤</div>
+                    <div class="grid-item-label">ملف اللاعب</div>
+                </div>
+            </div>
+
+            <!-- زر التثبيت -->
+            <div class="pwa-banner-btn">
+                <span>✓</span> التطبيق مثبّت على جهازك
+            </div>
+
+        </div>
+
+        <!-- الأقسام الأخرى -->
+        <div id="page-store" class="page-section">
+            <h2 style="margin-bottom:12px; color:var(--gold-light);">🛒 متجر الجوائز</h2>
+            <p style="color:var(--text-muted); font-size:12px;">سيتم عرض المنتجات المتاحة هنا</p>
+        </div>
+
+        <div id="page-prizes" class="page-section">
+            <h2 style="margin-bottom:12px; color:var(--gold-light);">📦 جوائزي</h2>
+            <p style="color:var(--text-muted); font-size:12px;">لا توجد جوائز مستلمة حالياً</p>
+        </div>
+
+        <div id="page-notifications" class="page-section">
+            <h2 style="margin-bottom:12px; color:var(--gold-light);">🔔 الإشعارات</h2>
+            <p style="color:var(--text-muted); font-size:12px;">لا توجد إشعارات جديدة</p>
+        </div>
+
+        <div id="page-profile" class="page-section">
+            <h2 style="margin-bottom:12px; color:var(--gold-light);">👤 ملف اللاعب</h2>
+            <p style="color:#fff;">الاسم: Anoo Tektok</p>
+        </div>
+
+    </div>
+
+    <!-- شريط التنقل السفلي -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" id="nav-home" onclick="switchPage('home')">
+            <span class="nav-icon">🏠</span>
+            <span>الرئيسية</span>
+        </button>
+        <button class="nav-item" id="nav-store" onclick="switchPage('store')">
+            <span class="nav-icon">🛒</span>
+            <span>متجر الجوائز</span>
+        </button>
+        <button class="nav-item" id="nav-prizes" onclick="switchPage('prizes')">
+            <span class="nav-icon">📦</span>
+            <span>جوائزي</span>
+        </button>
+        <button class="nav-item" id="nav-notifications" onclick="switchPage('notifications')">
+            <span class="nav-icon">🔔</span>
+            <span>الإشعارات</span>
+        </button>
+        <button class="nav-item" id="nav-profile" onclick="switchPage('profile')">
+            <span class="nav-icon">👤</span>
+            <span>ملف اللاعب</span>
+        </button>
+    </nav>
+
+    <script>
+        let points = parseInt(localStorage.getItem('userPoints') || '250');
+
+        function updatePointsUI() {
+            document.getElementById('headerPoints').innerText = points;
+            document.getElementById('userCardPoints').innerText = points;
+            localStorage.setItem('userPoints', points);
+        }
+
+        function handleWheelClick() {
+            let lastSpin = localStorage.getItem('lastSpinTime');
+            let now = new Date().getTime();
+
+            if (lastSpin && (now - lastSpin < 24 * 60 * 60 * 1000)) {
+                alert('عذراً! يمكنك تدوير العجلة مرة واحدة كل 24 ساعة.');
+                return;
+            }
+
+            points += 250;
+            updatePointsUI();
+            localStorage.setItem('lastSpinTime', now);
+            alert('مبروك! حصلت على 250 نقطة 🎉');
+            startTimer();
+        }
+
+        function startTimer() {
+            let lastSpin = localStorage.getItem('lastSpinTime');
+            if (!lastSpin) return;
+
+            setInterval(() => {
+                let now = new Date().getTime();
+                let diff = (24 * 60 * 60 * 1000) - (now - lastSpin);
+
+                if (diff <= 0) {
+                    document.getElementById('wheelTimer').innerText = "جاهز الآن!";
+                } else {
+                    let hrs = Math.floor(diff / (1000 * 60 * 60));
+                    let mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    let secs = Math.floor((diff % (1000 * 60)) / 1000);
+                    document.getElementById('wheelTimer').innerText = 
+                        `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                }
+            }, 1000);
+        }
+
+        function switchPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            let activeNav = document.getElementById('nav-' + pageId);
+            if(activeNav) activeNav.classList.add('active');
+        }
+
+        window.onload = function() {
+            updatePointsUI();
+            startTimer();
+        };
+    </script>
+</body>
+</html>
