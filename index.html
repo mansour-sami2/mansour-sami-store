@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر منصور سامي</title>
+    <style>
+        body {
+            font-family: Tahoma, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .wheel-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 20px auto;
+        }
+        #wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 5px solid #ffc107;
+            transition: transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        }
+        button {
+            background-color: #ffc107;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        button:hover {
+            background-color: #e0a800;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>عجلة الحظ - متجر منصور سامي 🎡</h2>
+        <div class="wheel-container">
+            <div id="wheel" style="background: conic-gradient(#ff5722 0deg 90deg, #4caf50 90deg 180deg, #ffeb3b 180deg 270deg, #2196f3 270deg 360deg);"></div>
+        </div>
+        <button id="spinBtn" onclick="spinWheel()">اضغط هنا لتدوير العجلة</button>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        let isSpinning = false;
+
+        function spinWheel() {
+            if (isSpinning) return;
+            
+            let prizes = JSON.parse(localStorage.getItem('wheel_prizes') || JSON.stringify([
+                { name: "حساب ببجي", weight: 0, icon: "🎁" },
+                { name: "كارت اسيا", weight: 0, icon: "🎁" },
+                { name: "رويال باس", weight: 0, icon: "🎁" }
+            ]));
+
+            isSpinning = true;
+            let wheel = document.getElementById('wheel');
+            let user = localStorage.getItem('current_user') || 'user_guest';
+
+            // حساب الأوزان الحقيقية المتاحة (فقط الأكبر من 0)
+            let totalWeight = 0;
+            for(let i = 0; i < prizes.length; i++) {
+                totalWeight += (prizes[i].weight || 0);
+            }
+
+            // إذا كانت كل الأوزان صفر، يتم منع الفوز العشوائي تماماً وحماية الجوائز
+            if (totalWeight <= 0) {
+                alert("عجلة الحظ مغلقة حالياً أو بانتظار التحديث!");
+                isSpinning = false;
+                return;
+            }
+
+            let randomWeight = Math.random() * totalWeight;
+            let currentSum = 0;
+            let winningIndex = 0;
+
+            for(let i = 0; i < prizes.length; i++) {
+                currentSum += (prizes[i].weight || 0);
+                if(randomWeight <= currentSum) { 
+                    winningIndex = i; 
+                    break; 
+                }
+            }
+
+            let angleStep = 360 / prizes.length;
+            let targetAngle = 360 - (winningIndex * angleStep) - (angleStep / 2);
+            wheel.style.transform = `rotate(${360 * 8 + targetAngle}deg)`;
+
+            setTimeout(() => {
+                isSpinning = false;
+                localStorage.setItem(user + '_last_spin', new Date().getTime().toString());
+                
+                let wonPrizeObj = prizes[winningIndex];
+                let wonPrizeName = `${wonPrizeObj.icon || '🎁'} ${wonPrizeObj.name}`;
+                
+                let myPrizes = JSON.parse(localStorage.getItem(user + '_my_prizes') || '[]');
+                myPrizes.push({ name: wonPrizeName, status: "فوز مباشر من العجلة ✅", contact: "-" });
+                localStorage.setItem(user + '_my_prizes', JSON.stringify(myPrizes));
+
+                let logs = JSON.parse(localStorage.getItem(user + '_logs') || '[]');
+                logs.unshift(`🎡 ربحت من العجلة: (${wonPrizeName})`);
+                localStorage.setItem(user + '_logs', JSON.stringify(logs));
+                
+                document.getElementById('result').innerText = `تهانينا! فزت بـ: (${wonPrizeName}) 🎉`;
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
