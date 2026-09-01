@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر منصور سامي</title>
+    <!-- مكتبة تيليجرام ويب آبل الرسمية -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Tahoma, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .header {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #333;
+        }
+        /* زر لوحة الأدمن مخفي افتراضياً ولن يظهر إلا للمدير */
+        #admin-panel-btn {
+            display: none;
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: #fff;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+        .card {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- رأس الصفحة ومعلومات المستخدم -->
+        <div class="header">
+            <h2>متجر منصور سامي</h2>
+            <p id="user-greeting">جاري تحميل بيانات المستخدم...</p>
+        </div>
+
+        <!-- زر لوحة التحكم الخاص بالأدمن فقط -->
+        <button id="admin-panel-btn" onclick="openAdminPanel()">
+            ⚙️ لوحة تحكم أدمن متجر منصور سامي
+        </button>
+
+        <!-- محتوى المتجر العادي -->
+        <div class="card">
+            <h3>عجلة الحظ اليومية</h3>
+            <p>قم بالتدوير مرة واحدة كل 24 ساعة لربح الجوائز!</p>
+        </div>
+    </div>
+
+    <script>
+        // تهيئة التيليجرام ويب آبل
+        window.Telegram.WebApp.ready();
+        const tg = window.Telegram.WebApp;
+
+        // جلب بيانات المستخدم الحالي
+        const user = tg.initDataUnsafe?.user;
+        const greetingElement = document.getElementById('user-greeting');
+        const adminBtn = document.getElementById('admin-panel-btn');
+
+        // يوزر الأدمن المعتمد لديك
+        const adminUsername = "ccc2000";
+
+        if (user) {
+            greetingElement.innerText = `مرحباً، @${user.username || user.first_name}`;
+
+            // التحقق مما إذا كان المستخدم الحالي هو الأدمن
+            if (user.username === adminUsername) {
+                // إظهار زر لوحة التحكم حصراً للأدمن
+                adminBtn.style.display = 'block';
+            } else {
+                // إخفاء الزر تماماً عن أي عضو عادي بدون إظهار أي كلمة سر
+                adminBtn.style.display = 'none';
+            }
+        } else {
+            // في حال فتح الموقع من خارج تيليجرام
+            greetingElement.innerText = `مرحباً بك في المتجر`;
+            adminBtn.style.display = 'none';
+        }
+
+        function openAdminPanel() {
+            alert("أهلاً بك يا مدير المتجر الرئيسي! تم فتح لوحة التحكم بنجاح.");
+            // هنا يمكنك توجيهك للوحة التحكم الخاصة بك أو إظهار محتوياتها
+        }
+    </script>
+
+</body>
+</html>
