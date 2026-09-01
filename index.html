@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر منصور سامي</title>
+    <!-- مكتبة التيليجرام الرسمية للـ Web App -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Tahoma, sans-serif;
+        }
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding-bottom: 70px;
+        }
+        .header {
+            width: 92%;
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .username-display {
+            color: #ffcc00;
+            font-size: 14px;
+            font-weight: bold;
+            direction: ltr;
+            text-align: right;
+        }
+        .stats {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 3px;
+        }
+        .avatar {
+            background: #ffcc00;
+            color: #121212;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        .content {
+            width: 92%;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .card {
+            background: #1a1a1a;
+            border: 1px solid #443311;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            font-size: 18px;
+            color: #ffcc00;
+            margin-bottom: 10px;
+        }
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #1a1a1a;
+            border-top: 1px solid #333;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+        .nav-item {
+            color: #aaa;
+            font-size: 11px;
+            text-align: center;
+            text-decoration: none;
+        }
+        .nav-item.active {
+            color: #ffcc00;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الهيدر العلوي -->
+    <div class="header">
+        <div class="user-info">
+            <span id="telegram-username" class="username-display">mansour_guest@</span>
+            <span class="stats">زوار الموقع الكلي: 1515</span>
+        </div>
+        <div class="avatar" id="user-initial">م</div>
+    </div>
+
+    <!-- المحتوى الرئيسي (عجلة الحظ) -->
+    <div class="content">
+        <div class="card">
+            <h2>عجلة الحظ المرتبة الحصرية</h2>
+            <p style="font-size: 13px; color: #ccc; margin-bottom: 15px;">تدوير مرة واحدة كل 24 ساعة بدقة!</p>
+            
+            <div style="background: #221a0a; border: 1px solid #b8860b; border-radius: 10px; padding: 12px; margin-bottom: 15px;">
+                <p style="font-size: 12px; color: #ffcc00;">⚠️ شرط أساسي للتدوير:</p>
+                <a href="https://t.me/BB4BB2" target="_blank" style="display: block; background: #332200; color: #ffcc00; padding: 8px; border-radius: 8px; margin-top: 8px; text-decoration: none; font-size: 13px;">
+                    📢 اشترك في قناة المتجر الرسمية (@BB4BB2)
+                </a>
+            </div>
+            
+            <div style="padding: 30px; background: #111; border-radius: 500px; width: 220px; height: 220px; margin: 0 auto; display: flex; align-items: center; justify-content: center; border: 3px solid #ffcc00; color: #ffcc00; font-weight: bold; font-size: 18px;">
+                أذر 🎡
+            </div>
+        </div>
+    </div>
+
+    <!-- شريط التنقل السفلي -->
+    <div class="nav-bar">
+        <a href="#" class="nav-item active">🏠<br>الرئيسية</a>
+        <a href="#" class="nav-item">🛒<br>متجر الجوائز</a>
+        <a href="#" class="nav-item">🎁<br>جوائز</a>
+        <a href="#" class="nav-item">🔔<br>الإشعارات</a>
+        <a href="#" class="nav-item">👤<br>ملف اللاعب</a>
+    </div>
+
+    <!-- كود جافاسكريبت لربط التيليجرام وسحب اليوزر تلقائياً -->
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // توسيع الشاشة لتملأ الموبايل
+
+        const user = tg.initDataUnsafe?.user;
+
+        if (user) {
+            // جلب البيانات الحقيقية للمستخدم من تيليجرام
+            const firstName = user.first_name || "مستخدم";
+            const username = user.username ? `@${user.username}` : `id: ${user.id}`;
+            
+            // تحديث العنصر في الواجهة يتبدل بيوزر الحساب الحقيقي
+            document.getElementById('telegram-username').innerText = username;
+            document.getElementById('user-initial').innerText = firstName.charAt(0);
+        }
+    </script>
+</body>
+</html>
