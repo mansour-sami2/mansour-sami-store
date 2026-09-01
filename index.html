@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر منصور سامي</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Tahoma, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 10px;
+            text-align: center;
+            padding-bottom: 70px;
+        }
+        .container {
+            max-width: 450px;
+            margin: 0 auto;
+        }
+        .header {
+            background: #1e1e1e;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        /* زر الأدمن يظهر فقط للمدير ccc2000 */
+        #admin-panel-btn {
+            display: none;
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: #fff;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 10px rgba(243, 156, 18, 0.3);
+        }
+        .wheel-card {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #333;
+        }
+        .rule-box {
+            background: #252525;
+            padding: 12px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border: 1px solid #444;
+        }
+        /* شريط التنقل السفلي الأصلي */
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            background: #1a1a1a;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            border-top: 1px solid #333;
+            z-index: 100;
+        }
+        .nav-item {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 11px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .nav-item.active {
+            color: #f39c12;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- هيدر المتجر والمعلومات -->
+        <div class="header">
+            <div>
+                <h3 id="store-title" style="margin: 0; color: #f39c12; font-size: 16px; text-align: right;">متجر منصور سامي</h3>
+                <span id="user-greeting" style="font-size: 12px; color: #aaa;">جاري التحميل...</span>
+            </div>
+            <div id="user-badge" style="background: #f39c12; color: #121212; padding: 5px 10px; border-radius: 8px; font-weight: bold; font-size: 13px;">م</div>
+        </div>
+
+        <!-- زر لوحة تحكم الأدمن (مخفي عن الجميع ما عدا ccc2000) -->
+        <button id="admin-panel-btn" onclick="openAdminPanel()">
+            ⚙️ لوحة تحكم الأدمن (عرض جميع المشتركين والطلبات)
+        </button>
+
+        <!-- عجلة الحظ الكلاسيكية -->
+        <div class="wheel-card">
+            <h3 style="margin: 0 0 5px 0; color: #fff; font-size: 15px;">عجلة الحظ المرتبة الحصرية</h3>
+            <p style="font-size: 12px; color: #aaa; margin: 0 0 10px 0;">تدوير مرة واحدة كل 24 ساعة بدقة!</p>
+            
+            <div class="rule-box">
+                <p style="color: #f39c12; font-weight: bold; margin: 0 0 5px 0; font-size: 13px;">⚠️ شرط أساسي للتدوير:</p>
+                <a href="https://t.me/ccc2000" target="_blank" style="display: block; background: #e74c3c; color: #fff; padding: 8px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: bold;">
+                    📢 اشترك في قناة المتجر الرسمية (@ccc2000)
+                </a>
+            </div>
+
+            <!-- رسمة مبسطة لعجلة الحظ حتى يرجع الشكل القديم -->
+            <div style="width: 180px; height: 180px; background: conic-gradient(#f39c12 0deg 45deg, #2c3e50 45deg 90deg, #e74c3c 90deg 135deg, #8e44ad 135deg 180deg, #27ae60 180deg 225deg, #d35400 225deg 270deg, #2980b9 270deg 315deg, #c0392b 315deg 360deg); border-radius: 50%; margin: 15px auto; border: 4px solid #f39c12; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(243,156,18,0.4);">
+                <div style="background: #121212; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #f39c12; font-weight: bold; border: 2px solid #f39c12;">
+                    أدر 🎡
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- شريط التنقل السفلي الأصلي -->
+    <div class="nav-bar">
+        <a href="#" class="nav-item active">🏠 الرئيسية</a>
+        <a href="#" class="nav-item">🛒 متجر الجوائز</a>
+        <a href="#" class="nav-item">🎁 جوائزي</a>
+        <a href="#" class="nav-item">🔔 الإشعارات</a>
+        <a href="#" class="nav-item">👤 ملف اللاعب</a>
+    </div>
+
+    <script>
+        window.Telegram.WebApp.ready();
+        const tg = window.Telegram.WebApp;
+        const user = tg.initDataUnsafe?.user;
+        const greetingElement = document.getElementById('user-greeting');
+        const adminBtn = document.getElementById('admin-panel-btn');
+
+        // يوزر الأدمن الأساسي
+        const adminUsername = "ccc2000";
+
+        if (user) {
+            const username = user.username || "";
+            greetingElement.innerText = `@${username || user.first_name}`;
+
+            // فحص الأدمن وإظهار لوحة التحكم حصراً لـ ccc2000
+            if (username === adminUsername) {
+                adminBtn.style.display = 'block';
+            } else {
+                adminBtn.style.display = 'none';
+            }
+        } else {
+            greetingElement.innerText = `@ZVisitor`;
+            adminBtn.style.display = 'none';
+        }
+
+        function openAdminPanel() {
+            alert("أهلاً بك يا مدير المتجر الرئيسي! تم فتح لوحة التحكم بنجاح.");
+        }
+    </script>
+
+</body>
+</html>
