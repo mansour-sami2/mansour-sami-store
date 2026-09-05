@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر منصور سامي | منصة الجوائز الرسمية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+        body { font-family: 'Cairo', sans-serif; background-color: #0d0d12; color: #ffffff; }
+        .gold-gradient { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%); }
+        .rgb-glow { box-shadow: 0 0 25px rgba(251, 191, 36, 0.45), inset 0 0 15px rgba(168, 85, 247, 0.25); }
+        .card-box { background-color: #16161f; border: 1px solid rgba(251, 191, 36, 0.35); border-radius: 18px; box-shadow: 0 8px 25px rgba(0,0,0,0.6); }
+        .profile-card { background: linear-gradient(145deg, #181824 0%, #101017 100%); border: 1px solid rgba(168, 85, 247, 0.4); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); }
+        .wheel-container { position: relative; width: 330px; height: 330px; margin: 0 auto; }
+        .wheel { width: 100%; height: 100%; border-radius: 50%; border: 7px solid #fbbf24; position: relative; overflow: hidden; transition: transform 5s cubic-bezier(0.15, 0.85, 0.15, 1); box-shadow: 0 0 35px rgba(251, 191, 36, 0.6), 0 0 65px rgba(168, 85, 247, 0.4); }
+        .wheel-pointer { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 24px solid #fbbf24; z-index: 40; filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.9)); }
+        .prize-item { position: absolute; width: 75px; height: 55px; left: calc(50% - 37.5px); top: 16px; transform-origin: 37.5px 149px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; font-size: 8.5px; font-weight: 700; color: #fff; text-align: center; text-shadow: 0 1px 3px #000; overflow: hidden; }
+        #toast { transition: opacity 0.3s ease, transform 0.3s ease; }
+
+        .announcement-ticker {
+            background: linear-gradient(90deg, #1e1b4b, #311042, #1e1b4b);
+            border-bottom: 1px solid rgba(251, 191, 36, 0.3);
+            border-top: 1px solid rgba(251, 191, 36, 0.3);
+            color: #fbbf24;
+            padding: 8px 0;
+            font-size: 12px;
+            font-weight: 700;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+        .ticker-track {
+            display: inline-block;
+            animation: tickerMove 25s linear infinite;
+            padding-left: 100%;
+        }
+        @keyframes tickerMove {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+        
+        .app-banner { 
+            background: linear-gradient(180deg, rgba(217, 119, 6, 0.15) 0%, rgba(15, 15, 22, 0.95) 100%); 
+            border: 1px solid rgba(245, 158, 11, 0.4); 
+        }
+
+        .social-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid rgba(251, 191, 36, 0.5);
+            background: transparent;
+            color: #fbbf24;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .social-btn:hover {
+            background-color: #fbbf24;
+            color: #000;
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.6);
+        }
+        .creator-avatar-box {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background-color: #222630;
+            border: 1px solid #fbbf24;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fbbf24;
+            font-size: 18px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="pb-28">
+
+    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-purple-500 text-black font-black px-5 py-2.5 rounded-xl text-xs z-[100] opacity-0 pointer-events-none shadow-2xl">
+        تم بنجاح! ✨
+    </div>
+
+    <!-- الشريط المتحرك -->
+    <div class="announcement-ticker">
+        <div class="ticker-track">
+            ⚡ تنبيه هام: التعامل حصرياً عبر الروابط الرسمية لمتجر منصور سامي | 🏆 مبروك لكل الأبطال الفائزين بجوائز العجلة الأسبوعية | 🎁 تذكير: دعوة 10 أصدقاء تمنحك 100 نقطة مضافة فوراً!
+        </div>
+    </div>
+
+    <header class="flex justify-between items-center p-4 card-box m-3 sticky top-2 z-50 backdrop-blur bg-opacity-95 rgb-glow">
+        <div class="flex items-center gap-2 cursor-pointer" ondblclick="playSound('click'); openAdminLogin()" title="انقر مرتين للوصول لوحة التحكم">
+            <div class="w-10 h-10 rounded-2xl gold-gradient flex items-center justify-center font-black text-black text-xl shadow-lg">م</div>
+            <div>
+                <h1 class="font-bold text-sm text-amber-300 tracking-wider">متجر منصور سامي</h1>
+                <span class="text-[10px] text-gray-400">زوار الموقع الكلي: <strong id="globalVisitorsCount" class="text-amber-400">0</strong></span>
+            </div>
+        </div>
+        <div class="flex items-center gap-2">
+            <button onclick="playSound('click'); openLoginModal()" id="loginBtnHeader" class="gold-gradient text-black font-bold px-4 py-2 rounded-xl text-xs shadow-lg">تسجيل الدخول</button>
+        </div>
+    </header>
+
+    <main class="p-3 space-y-4 max-w-md mx-auto">
+        
+        <!-- Tab 1: Home -->
+        <div id="tab-home" class="space-y-4">
+            
+            <div class="app-banner p-4 rounded-2xl text-center space-y-3 relative overflow-hidden card-box">
+                <div class="flex items-center justify-center gap-2 text-amber-300 font-bold text-sm">
+                    <span>🔥 حمّل تطبيق المتجر على هاتفك</span>
+                    <span class="bg-amber-500/20 p-1 rounded-lg text-xs">📱</span>
+                </div>
+                <p class="text-[10px] text-gray-300">أيقونة خاصة على الشاشة الرئيسية، دخول أسرع، وتصفح سلس بدون شريط المتصفح</p>
+                <button onclick="playSound('click'); installAppPrompt()" class="w-full gold-gradient text-black font-black py-2.5 rounded-xl text-xs shadow-lg flex items-center justify-center gap-1">
+                    <span>📥 تنزيل وتثبيت التطبيق الآن</span>
+                </button>
+                <span class="text-[9px] text-gray-400 block">تثبيت مباشر • سريع ومجاني</span>
+            </div>
+
+            <div id="guestBox" class="card-box p-4 text-center space-y-3">
+                <h2 class="font-bold text-sm text-amber-300">أنت تتصفح كضيف في متجر منصور سامي</h2>
+                <p class="text-[11px] text-gray-300 leading-relaxed">سجّل الدخول بيوزر تليجرام أو اسمك لكي تلف العجلة، تجمع نقاط، وتدعو أصدقاءك لمضاعفة أرباحك!</p>
+                <button onclick="playSound('click'); openLoginModal()" class="w-full gold-gradient text-black font-bold py-3 rounded-xl text-xs shadow-md">تسجيل الدخول الآن</button>
+            </div>
+
+            <div class="card-box p-4 text-center space-y-3">
+                <h3 class="font-bold text-sm text-amber-300">عجلة الحظ الحصرية 🔥</h3>
+                <p class="text-[10px] text-gray-400">تدوير مرة واحدة كل 24 ساعة بدقة!</p>
+                
+                <div id="subChannelBox" class="bg-amber-950/30 border border-amber-500/40 p-3 rounded-xl space-y-2">
+                    <p class="text-[11px] text-amber-200 font-bold">⚠️ شرط أساسي للتدوير:</p>
+                    <a href="https://t.me/BB4BB2" target="_blank" onclick="playSound('click'); markChannelClicked()" class="block bg-black/50 border border-amber-500/50 text-amber-300 p-2 rounded-xl text-xs font-bold hover:bg-black/70 transition">
+                        📢 اشترك في قناة المتجر الرسمية (@BB4BB2)
+                    </a>
+                    <button onclick="playSound('click'); verifySubscription()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs transition shadow">
+                        ✅ لقد اشتركت في القناة، تحقق الآن
+                    </button>
+                </div>
+
+                <div class="wheel-container my-3 opacity-40 pointer-events-none" id="wheelWrapper">
+                    <div class="wheel-pointer"></div>
+                    <div id="wheel" class="wheel"></div>
+                    <div class="absolute inset-[32%] rounded-full bg-[#121215] border-2 border-amber-400 flex items-center justify-center shadow-inner cursor-pointer z-30 rgb-glow" onclick="spinWheel()">
+                        <span class="text-xs font-black text-amber-300">أدر 🎡</span>
+                    </div>
+                </div>
+
+                <button onclick="spinWheel()" id="spinBtn" disabled class="w-full bg-gray-700 text-gray-400 font-bold py-3 rounded-xl text-xs shadow-lg cursor-not-allowed">أكمل اشتراكك وتسجيل دخولك لأجل التدوير</button>
+                <p id="timerText" class="text-[11px] text-red-400 font-semibold"></p>
+            </div>
+        </div>
+
+        <!-- Tab 2: Store -->
+        <div id="tab-store" class="space-y-4 hidden">
+            <div class="card-box p-4 space-y-3">
+                <h3 class="font-bold text-sm text-amber-300 border-b border-gray-800 pb-2 flex justify-between items-center">
+                    <span>🛒 متجر استبدال الجوائز الحقيقي</span>
+                    <span class="text-[10px] text-gray-400">رصيدك: <strong id="storePoints" class="text-amber-400">0</strong> نقطة</span>
+                </h3>
+                <p class="text-[10px] text-gray-400">اختر الجائزة واطلبها مع ملاحظاتك الخاصة:</p>
+                <div id="storeItemsContainer" class="space-y-2 text-xs"></div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Creators -->
+        <div id="tab-creators" class="space-y-4 hidden">
+            <div class="card-box p-4 space-y-3">
+                <h3 class="font-bold text-sm text-amber-300 border-b border-gray-800 pb-2">🌟 صناع المحتوى والشركاء الرسميون</h3>
+                <p class="text-[10px] text-gray-400">تابع صناع المحتوى المعتمدين للحصول على العروض والمسابقات الخاصة:</p>
+                
+                <div class="space-y-3 pt-1">
+                    <div class="bg-black/40 p-3 rounded-xl border border-amber-500/20 flex justify-between items-center gap-2">
+                        <div class="social-links-box flex gap-1.5">
+                            <a href="https://t.me/" target="_blank" class="social-btn"><i class="fa-paper-plane"></i></a>
+                            <a href="https://tiktok.com/@" target="_blank" class="social-btn"><i class="fa-brands fa-tiktok"></i></a>
+                            <a href="https://instagram.com/" target="_blank" class="social-btn"><i class="fa-camera"></i></a>
+                            <a href="https://youtube.com/@" target="_blank" class="social-btn"><i class="fa-play"></i></a>
+                        </div>
+                        <div class="creator-info flex items-center gap-3">
+                            <span class="font-bold text-white text-xs block">تشالز (الرسمي)</span>
+                            <div class="creator-avatar-box"><i class="fa-crown"></i></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-black/40 p-3 rounded-xl border border-amber-500/20 flex justify-between items-center gap-2">
+                        <div class="social-links-box flex gap-1.5">
+                            <a href="#" class="social-btn"><i class="fa-paper-plane"></i></a>
+                            <a href="#" class="social-btn"><i class="fa-brands fa-tiktok"></i></a>
+                            <a href="#" class="social-btn"><i class="fa-camera"></i></a>
+                            <a href="#" class="social-btn"><i class="fa-play"></i></a>
+                        </div>
+                        <div class="creator-info flex items-center gap-3">
+                            <span class="font-bold text-white text-xs block">ABN Z3EM</span>
+                            <div class="creator-avatar-box"><i class="fa-headphones"></i></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-black/40 p-3 rounded-xl border border-amber-500/20 flex justify-between items-center gap-2">
+                        <div class="social-links-box flex gap-1.5">
+                            <a href="#" class="social-btn"><i class="fa-paper-plane"></i></a>
+                            <a href="#" class="social-btn"><i class="fa-brands fa-tiktok"></i></a>
+                            <a href="#" class="social-btn"><i class="fa-camera"></i></a>
+                            <a href="#" class="social-btn"><i class="fa-play"></i></a>
+                        </div>
+                        <div class="creator-info flex items-center gap-3">
+                            <span class="font-bold text-white text-xs block">MoShawaly</span>
+                            <div class="creator-avatar-box"><i class="fa-headphones"></i></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-black/40 p-3 rounded-xl border border-amber-500/20 flex justify-between items-center gap-2">
+                        <div class="social-links-box flex gap-1.5">
+                            <a href="#" class="social-btn"><i class="fa-paper-plane"></i></a>
+                            <a href="#" class="social-btn"><i class="fa-brands fa-tiktok"></i></a>
+                            <a href="#" class="social-btn"><i class="fa-camera"></i></a>
+                            <a href="#" class="social-btn"><i class="fa-play"></i></a>
+                        </div>
+                        <div class="creator-info flex items-center gap-3">
+                            <span class="font-bold text-white text-xs block">بندرو</span>
+                            <div class="creator-avatar-box"><i class="fa-headphones"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Prizes -->
+        <div id="tab-prizes" class="space-y-4 hidden">
+            <div class="card-box p-4 space-y-3">
+                <h3 class="font-bold text-sm text-amber-300 border-b border-gray-800 pb-2">🏆 جوائزي وحالة طلباتي الداخلية</h3>
+                <div id="myPrizesListContainer" class="space-y-2">
+                    <p class="text-gray-400 text-xs text-center py-6">لا توجد جوائز بعد</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 5: Notifications -->
+        <div id="tab-notifications" class="space-y-4 hidden">
+            <div class="card-box p-4 space-y-3">
+                <h3 class="font-bold text-sm text-amber-300 border-b border-gray-800 pb-2">🔔 الإشعارات وسجل الانضمام</h3>
+                
+                <div class="bg-amber-950/20 p-3 rounded-xl border border-amber-500/30 space-y-2">
+                    <span class="font-bold text-amber-300 text-xs block">👥 سجل الأعضاء الجدد المنضمين للموقع:</span>
+                    <div id="notificationsUsersList" class="space-y-1.5 max-h-40 overflow-y-auto pr-1 text-xs">
+                        <p class="text-gray-400 text-center py-2 text-[11px]">جاري تحميل السجل...</p>
+                    </div>
+                </div>
+
+                <div id="notificationsContainer" class="space-y-2 text-xs"></div>
+            </div>
+        </div>
+
+        <!-- Tab 6: Profile -->
+        <div id="tab-profile" class="space-y-4 hidden">
+            <div id="adminQuickAccessBox" class="hidden">
+                <button onclick="playSound('click'); openDirectAdminPanel()" class="w-full bg-gradient-to-r from-amber-600 via-purple-600 to-yellow-500 text-black font-black py-3 rounded-xl text-xs shadow-lg flex items-center justify-center gap-2 border border-yellow-300">
+                    <span>⚙️ لوحة تحكم الأدمن (عرض المشتركين والطلبات الداخلية)</span>
+                </button>
+            </div>
+
+            <div class="profile-card p-5 space-y-4 text-center">
+                <div class="flex justify-between items-center">
+                    <span class="text-xs font-bold text-purple-300" id="userRankBadge">رتبة سفير المتجر 🎖️</span>
+                    <div class="w-8 h-8 rounded-xl gold-gradient flex items-center justify-center text-black font-black text-sm">🛡️</div>
+                </div>
+
+                <div class="flex flex-col items-center space-y-2">
+                    <div class="w-20 h-20 rounded-full border-2 border-amber-400 bg-black/60 flex items-center justify-center shadow-inner overflow-hidden rgb-glow">
+                        <span class="text-3xl">🔥</span>
+                    </div>
+                    <div>
+                        <h2 class="font-black text-base text-white" id="profileNameDisplay">زائر</h2>
+                        <span class="text-[10px] text-gray-400" id="profileSubDisplay">-</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2 pt-2">
+                    <div class="card-box p-2 text-center bg-black/40">
+                        <span class="text-[10px] text-gray-400 block">النقاط</span>
+                        <span class="font-black text-amber-400 text-sm" id="profilePointsVal">0</span>
+                    </div>
+                    <div class="card-box p-2 text-center bg-black/40">
+                        <span class="text-[10px] text-gray-400 block">الأصدقاء المدعوون</span>
+                        <span class="font-black text-purple-400 text-sm" id="profileRefsVal">0</span>
+                    </div>
+                    <div class="card-box p-2 text-center bg-black/40">
+                        <span class="text-[10px] text-gray-400 block">الجوائز</span>
+                        <span class="font-black text-amber-400 text-sm" id="profilePrizesVal">0</span>
+                    </div>
+                </div>
+
+                <div class="space-y-3 text-right pt-3 border-t border-purple-500/30 bg-purple-950/20 p-3 rounded-xl border border-purple-500/20">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-amber-300 font-bold">🚀 نظام الإحالة (كل 10 أصدقاء = 100 نقطة!)</span>
+                        <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">مكافأة كبرى</span>
+                    </div>
+                    <p class="text-[10px] text-gray-300 leading-relaxed">شارك رابطك مع أصدقائك؛ لكل 10 أشخاص يسجلون من رابطك تكسب تلقائياً 100 نقطة مضافة لرصيدك! 🔥</p>
+                    <div class="flex gap-1">
+                        <input id="profileRefLink" type="text" readonly class="w-full bg-black/80 border border-amber-500/40 p-2 rounded-xl text-[10px] text-amber-300 text-center outline-none" />
+                        <button onclick="playSound('click'); copyReferralLink()" class="gold-gradient text-black font-black px-4 py-1.5 rounded-xl text-[11px] whitespace-nowrap shadow-lg">نسخ الرابط 📋</button>
+                    </div>
+                    <div class="flex justify-between items-center text-[10px] text-gray-400 pt-1">
+                        <span>زيارات رابطك: <strong id="profileClicksVal" class="text-amber-400">0</strong></span>
+                        <span class="text-purple-300 font-bold">انضم عبرك: <strong id="profileRefsCountVal" class="text-purple-400">0</strong> أبطال</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2 pt-2 border-t border-purple-500/20">
+                    <a href="https://t.me/BB4BB2" target="_blank" onclick="playSound('click'); markChannelClicked()" class="block bg-purple-950/40 border border-purple-500/50 text-purple-300 p-2.5 rounded-xl text-xs font-bold hover:bg-purple-900/40 transition">
+                        💬 تفاعل مع منشورات القناة الرسمية
+                    </a>
+                    <button onclick="playSound('click'); claimChannelInteractionReward()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 rounded-xl text-xs transition shadow">
+                        🎁 استلم مكافأة التفاعل (50 نقطة)
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-box p-4 space-y-3">
+                <h3 class="font-bold text-sm text-amber-300 border-b border-gray-800 pb-2">سجل النقاط والعمليات</h3>
+                <div id="profilePointsLog" class="text-xs text-gray-400">لا توجد عمليات بعد</div>
+            </div>
+
+            <div class="space-y-2 pt-2">
+                <button onclick="playSound('click'); logoutUser()" class="w-full bg-red-600/80 hover:bg-red-600 text-white font-bold py-3 rounded-xl text-xs shadow-md">تسجيل خروج / متابعة كضيف</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 card-box bg-[#13131a] border-t border-amber-500/30 flex justify-around py-3 text-[10px] z-50 rgb-glow">
+        <button onclick="playSound('click'); switchTab('home', this)" class="flex flex-col items-center text-amber-400 transition nav-btn" data-tab="home"><span>🏠</span><span class="mt-0.5">الرئيسية</span></button>
+        <button onclick="playSound('click'); switchTab('store', this)" class="flex flex-col items-center text-gray-400 hover:text-amber-400 transition nav-btn" data-tab="store"><span>🛒</span><span class="mt-0.5">المتجر</span></button>
+        <button onclick="playSound('click'); switchTab('creators', this)" class="flex flex-col items-center text-gray-400 hover:text-amber-400 transition nav-btn" data-tab="creators"><span>🌟</span><span class="mt-0.5">صناع المحتوى</span></button>
+        <button onclick="playSound('click'); switchTab('prizes', this)" class="flex flex-col items-center text-gray-400 hover:text-amber-400 transition nav-btn" data-tab="prizes"><span>🎁</span><span class="mt-0.5">جوائزي</span></button>
+        <button onclick="playSound('click'); switchTab('notifications', this)" class="flex flex-col items-center text-gray-400 hover:text-amber-400 transition nav-btn" data-tab="notifications"><span>🔔</span><span class="mt-0.5">الإشعارات</span></button>
+        <button onclick="playSound('click'); switchTab('profile', this)" class="flex flex-col items-center text-gray-400 hover:text-amber-400 transition nav-btn" data-tab="profile"><span>👤</span><span class="mt-0.5">حسابي</span></button>
+    </nav>
+
+    <!-- Modals -->
+    <div id="storeOrderModal" class="fixed inset-0 bg-black/85 hidden z-50 flex items-center justify-center p-4">
+        <div class="card-box w-full max-w-sm rounded-2xl p-5 space-y-4 text-center">
+            <h3 class="font-bold text-amber-300 text-sm">🛒 تأكيد الاستبدال وإرسال الملاحظات</h3>
+            <p id="storeOrderTitle" class="text-xs text-amber-200 font-bold"></p>
+            <div class="space-y-2 text-right">
+                <label class="text-[10px] text-gray-300 block">اكتب ملاحظتك أو طريقة الاستلام (مثلاً: يوزر حسابك، رقم الهاتف، أو تفاصيل التواصل):</label>
+                <textarea id="userCustomNote" placeholder="اكتب ملاحظتك هنا..." class="w-full bg-black/60 border border-amber-500/40 p-2.5 rounded-xl text-white text-xs outline-none h-20 resize-none"></textarea>
+            </div>
+            <div class="flex gap-2 pt-1">
+                <button onclick="playSound('click'); confirmStoreOrder()" class="w-1/2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs shadow">إرسال الطلب 🚀</button>
+                <button onclick="playSound('click'); closeStoreOrderModal()" class="w-1/2 bg-gray-700 text-white py-2.5 rounded-xl text-xs">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="claimModal" class="fixed inset-0 bg-black/85 hidden z-50 flex items-center justify-center p-4">
+        <div class="card-box w-full max-w-sm rounded-2xl p-5 space-y-4 text-center">
+            <h3 class="font-bold text-amber-300 text-sm">🎉 مبروك! تم تسجيل طلبك داخل الموقع</h3>
+            <p id="claimPrizeNameText" class="text-xs text-amber-200 font-bold"></p>
+            <p class="text-[11px] text-gray-300">تم إرسال تفاصيل الجائزة فوراً إلى لوحة تحكم الأدمن وسيتم تسليمها لك قريباً:</p>
+            <div class="space-y-2 pt-1">
+                <button onclick="playSound('click'); closeClaimModal()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs transition shadow">حسناً، عرض جوائزي 🎁</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="loginModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
+        <div class="card-box w-full max-w-sm rounded-2xl p-5 space-y-4 text-center">
+            <h3 class="font-bold text-amber-300 text-sm">تسجيل الدخول في متجر منصور سامي</h3>
+            <input id="userPhoneOrTg" type="text" placeholder="أدخل يوزر تليجرام (مثل: username)" class="w-full bg-black/50 border border-amber-500/30 p-3 rounded-xl text-white text-xs text-center outline-none" style="direction: ltr;">
+            <button onclick="playSound('click'); loginUser()" class="w-full gold-gradient text-black font-bold py-3 rounded-xl text-xs shadow">دخول للحساب الرسمي 🚀</button>
+            <button onclick="playSound('click'); closeLoginModal()" class="text-gray-400 text-xs">إلغاء</button>
+        </div>
+    </div>
+
+    <div id="adminLoginModal" class="fixed inset-0 bg-black/85 hidden z-50 flex items-center justify-center p-4">
+        <div class="card-box w-full max-w-xs rounded-2xl p-5 space-y-3 text-center">
+            <h3 class="font-bold text-amber-300 text-sm">🔒 لوحة تحكم أدمن متجر منصور سامي</h3>
+            <input id="adminPasswordInput" type="password" placeholder="كلمة المرور" class="w-full bg-black/50 border border-amber-500/40 p-2.5 rounded-xl text-white text-center text-xs outline-none">
+            <div class="flex gap-2 pt-1">
+                <button onclick="playSound('click'); verifyAdmin()" class="w-1/2 gold-gradient text-black font-bold py-2 rounded-xl text-xs">دخول</button>
+                <button onclick="playSound('click'); closeAdminLogin()" class="w-1/2 bg-gray-700 text-white py-2 rounded-xl text-xs">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="adminPanelModal" class="fixed inset-0 bg-black/92 hidden z-50 flex items-center justify-center p-4">
+        <div class="card-box w-full max-w-lg rounded-2xl p-4 space-y-4 text-xs max-h-[92vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-gray-800 pb-2">
+                <h3 class="font-bold text-amber-300 text-sm">لوحة تحكم الأدمن المتقدمة ⚙️</h3>
+                <button onclick="playSound('click'); closeAdminPanel()" class="text-gray-400 text-base font-bold">✕</button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+                <div class="bg-amber-950/25 p-3 rounded-xl border border-amber-500/40 text-center">
+                    <span class="text-[10px] text-gray-400 block">إجمالي زوار الموقع</span>
+                    <span id="adminTotalVisits" class="font-black text-amber-400 text-base">0</span>
+                </div>
+                <div class="bg-emerald-950/25 p-3 rounded-xl border border-emerald-500/40 text-center">
+                    <span class="text-[10px] text-gray-400 block">الجوائز المُسلّمة</span>
+                    <span id="adminDeliveredCount" class="font-black text-emerald-400 text-base">0</span>
+                </div>
+            </div>
+
+            <div class="bg-amber-950/20 p-3 rounded-xl border border-amber-500/40 space-y-2">
+                <h4 class="font-bold text-amber-300 text-sm">📢 إرسال إشعار عام لكل المشتركين:</h4>
+                <input id="adminNotifTitle" type="text" placeholder="عنوان الإشعار" class="w-full bg-black/60 border border-amber-500/30 p-2 rounded-xl text-white outline-none">
+                <textarea id="adminNotifText" placeholder="نص الإشعار..." class="w-full bg-black/60 border border-amber-500/30 p-2 rounded-xl text-white outline-none h-16 resize-none"></textarea>
+                <button onclick="playSound('click'); sendGlobalNotification()" class="w-full bg-amber-600 text-black font-bold py-2 rounded-xl shadow">إرسال لجميع المشتركين 🔔</button>
+            </div>
+
+            <div class="bg-amber-950/20 p-3 rounded-xl border border-amber-500/40 space-y-2">
+                <h4 class="font-bold text-amber-300 text-sm">👥 سجل المشتركين وإحالاتهم:</h4>
+                <div id="adminUsersList" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
+            </div>
+
+            <div class="bg-amber-950/20 p-3 rounded-xl border border-amber-500/40 space-y-2">
+                <h4 class="font-bold text-amber-300 text-sm">📥 طلبات استبدال وفوز العجلة (مع ملاحظات الأعضاء):</h4>
+                <div id="adminRequestsList" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
+            </div>
+
+            <div class="bg-black/40 p-3 rounded-xl border border-amber-500/30 space-y-2">
+                <h4 class="font-bold text-amber-300">🛒 إضافة جائزة جديدة لمتجر الاستبدال:</h4>
+                <input id="newStoreName" type="text" placeholder="اسم الجائزة" class="w-full bg-black/60 border border-amber-500/30 p-2 rounded-xl text-white outline-none">
+                <div class="grid grid-cols-2 gap-2">
+                    <input id="newStoreCost" type="number" placeholder="التكلفة بالنقاط" class="bg-black/60 border border-amber-500/30 p-2 rounded-xl text-white text-center outline-none">
+                    <input id="newStoreStock" type="number" placeholder="الكمية المتاحة" class="bg-black/60 border border-amber-500/30 p-2 rounded-xl text-white text-center outline-none">
+                </div>
+                <button onclick="playSound('click'); addStoreItem()" class="w-full bg-emerald-600 text-white font-bold py-2 rounded-xl shadow">إضافة للمتجر</button>
+            </div>
+
+            <div class="space-y-2">
+                <h4 class="font-bold text-amber-300">📦 قائمة متجر الاستبدال:</h4>
+                <div id="adminStoreList" class="space-y-1.5 max-h-32 overflow-y-auto pr-1"></div>
+            </div>
+
+            <div class="bg-black/40 p-3 rounded-xl border border-amber-500/30 space-y-2">
+                <h4 class="font-bold text-amber-300">🎡 إدارة جوائز عجلة الحظ (وزن 0 تظهر ولا تفوز):</h4>
+                <div class="grid grid-cols-3 gap-2">
+                    <input id="newPrizeName" type="text" placeholder="اسم الجائزة" class="col-span-2 bg-black/60 border border-amber-500/30 p-2 rounded-xl text-white outline-none">
+                    <input id="newPrizeIcon" type="text" placeholder="أيقونة (💎)" class="bg-black/60 border border-amber-500/30 p-2 rounded-xl text-white text-center outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <input id="newPrizeStock" type="number" placeholder="الكمية المتاحة" class="bg-black/60 border border-amber-500/30 p-2 rounded-xl text-white text-center outline-none">
+                    <input id="newPrizeWeight" type="number" placeholder="الوزن النسبي (0 للديكور)" value="10" class="bg-black/60 border border-amber-500/30 p-2 rounded-xl text-white text-center outline-none">
+                </div>
+                <button onclick="playSound('click'); addWheelPrize()" class="w-full bg-blue-600 text-white font-bold py-2 rounded-xl shadow">إضافة للعجلة</button>
+            </div>
+
+            <div class="space-y-2">
+                <h4 class="font-bold text-amber-300">📋 قائمة العجلة الحالية:</h4>
+                <div id="adminPrizesList" class="space-y-1.5 max-h-32 overflow-y-auto pr-1"></div>
+            </div>
+
+            <button onclick="playSound('click'); saveAdminSettings()" class="w-full gold-gradient text-black font-bold py-3 rounded-xl text-sm shadow">حفظ وإغلاق</button>
+        </div>
+    </div>
+
+    <script>
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            try {
+                if (audioCtx.state === 'suspended') { audioCtx.resume(); }
+                const osc = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                let now = audioCtx.currentTime;
+
+                if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(600, now);
+                    osc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
+                    gainNode.gain.setValueAtTime(0.15, now);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                } 
+                else if (type === 'spin_tick') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(300, now);
+                    osc.frequency.exponentialRampToValueAtTime(150, now + 0.04);
+                    gainNode.gain.setValueAtTime(0.1, now);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.04);
+                    osc.start(now);
+                    osc.stop(now + 0.04);
+                }
+                else if (type === 'win') {
+                    let notes = [523.25, 659.25, 783.99, 1046.50];
+                    notes.forEach((freq, index) => {
+                        let noteOsc = audioCtx.createOscillator();
+                        let noteGain = audioCtx.createGain();
+                        noteOsc.connect(noteGain);
+                        noteGain.connect(audioCtx.destination);
+                        let startTime = now + (index * 0.12);
+                        noteOsc.type = 'square';
+                        noteOsc.frequency.setValueAtTime(freq, startTime);
+                        noteGain.gain.setValueAtTime(0.15, startTime);
+                        noteGain.gain.exponentialRampToValueAtTime(0.01, startTime + 0.25);
+                        noteOsc.start(startTime);
+                        noteOsc.stop(startTime + 0.25);
+                    });
+                }
+            } catch(e) { console.log("Audio error"); }
+        }
+
+        const ADMIN_USER = 'ccc2ooo';
+        const ADMIN_PASSWORD = 'anooalaa';
+
+        let defaultStoreItems = [
+            { id: 1, name: "هدية نقاط المتجر (50 نقطة)", cost: 100, stock: 20 },
+            { id: 2, name: "حساب ببجي لفل 70", cost: 1000, stock: 3 },
+            { id: 3, name: "رويال باس مجاني", cost: 500, stock: 10 }
+        ];
+
+        let defaultPrizes = [
+            { name: "مبلغ 100", icon: "💵", weight: 0, stock: 5 },
+            { name: "1000 شده ببجي", icon: "💎", weight: 10, stock: 2 },
+            { name: "100 نقطة", icon: "💯", weight: 20, stock: 15 },
+            { name: "حساب تيك توك", icon: "🎵", weight: 0, stock: 1 },
+            { name: "كارت سياره", icon: "🚗", weight: 0, stock: 3 },
+            { name: "حساب ببجي", icon: "🔥", weight: 0, stock: 2 },
+            { name: "رويال باس", icon: "👑", weight: 15, stock: 4 },
+            { name: "حساب انستا", icon: "📸", weight: 0, stock: 3 },
+            { name: "كارت آسيا", icon: "💳", weight: 0, stock: 2 }
+        ];
+
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+        });
+
+        function installAppPrompt() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        showToast("جاري تثبيت التطبيق... 🚀");
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                showToast("اضغط خيارات المتصفح (⋮) ثم اختر 'إضافة إلى الشاشة الرئيسية' 📱");
+            }
+        }
+
+        function getStoreItems() {
+            let saved = localStorage.getItem('mansour_store_items');
+            return saved ? JSON.parse(saved) : defaultStoreItems;
+        }
+
+        function getPrizes() {
+            let saved = localStorage.getItem('mansour_wheel_prizes');
+            return saved ? JSON.parse(saved) : defaultPrizes;
+        }
+
+        function getAllRequests() {
+            let saved = localStorage.getItem('mansour_admin_requests');
+            return saved ? JSON.parse(saved) : [];
+        }
+
+        function getRegisteredUsers() {
+            let saved = localStorage.getItem('mansour_registered_users');
+            return saved ? JSON.parse(saved) : [];
+        }
+
+        function cleanUsernameInput(inputVal) {
+            if(!inputVal) return '';
+            let clean = inputVal.toString().trim();
+            if (clean.includes('ref=')) { clean = clean.split('ref=')[1] || clean; }
+            if (clean.includes('?')) clean = clean.split('?')[0];
+            clean = clean.replace('https://', '').replace('http://', '').replace('www.', '').replace('@', '').trim();
+            if(clean.includes('/')) clean = clean.split('/')[0];
+            clean = clean.replace(/[^a-zA-Z0-9_]/g, '');
+            return clean;
+        }
+
+        function registerUserToList(username) {
+            let cleanVal = cleanUsernameInput(username);
+            if(!cleanVal || cleanVal.length < 2) return;
+            let users = getRegisteredUsers();
+            if(!users.includes(cleanVal)) {
+                users.push(cleanVal);
+                localStorage.setItem('mansour_registered_users', JSON.stringify(users));
+            }
+            renderNotifications();
+        }
+
+        let pendingStoreItemObj = null;
+
+        function showToast(msg = "تم بنجاح! ✨") {
+            let toast = document.getElementById('toast');
+            if(!toast) return;
+            toast.innerText = msg;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            toast.classList.add('opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 2500);
+        }
+
+        function trackVisitors() {
+            let totalVisits = parseInt(localStorage.getItem('mansour_total_visitors') || '0');
+            if (!sessionStorage.getItem('mansour_counted_session')) {
+                totalVisits += 1;
+                localStorage.setItem('mansour_total_visitors', totalVisits);
+                sessionStorage.setItem('mansour_counted_session', 'true');
+            }
+            let visitorEl = document.getElementById('globalVisitorsCount');
+            if(visitorEl) visitorEl.innerText = totalVisits;
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const refUser = urlParams.get('ref');
+            if (refUser) {
+                let cleanRef = cleanUsernameInput(refUser);
+                let clicksKey = cleanRef + '_link_clicks';
+                let currentClicks = parseInt(localStorage.getItem(clicksKey) || '0');
+                if (!sessionStorage.getItem('mansour_ref_counted_' + cleanRef)) {
+                    currentClicks += 1;
+                    localStorage.setItem(clicksKey, currentClicks);
+                    sessionStorage.setItem('mansour_ref_counted_' + cleanRef, 'true');
+                }
+                if (!localStorage.getItem('mansour_pending_ref')) {
+                    localStorage.setItem('mansour_pending_ref', cleanRef);
+                }
+            }
+        }
+
+        function renderStore() {
+            let items = getStoreItems();
+            let container = document.getElementById('storeItemsContainer');
+            if(!container) return;
+            container.innerHTML = '';
+            items.forEach(item => {
+                let isOut = item.stock <= 0;
+                let row = document.createElement('div');
+                row.className = "flex justify-between items-center bg-black/40 p-3 rounded-xl border border-amber-500/20";
+                row.innerHTML = `
+                    <div>
+                        <span class="font-bold text-amber-200 block">🎁 ${item.name}</span>
+                        <span class="text-[10px] text-gray-400">التكلفة: ${item.cost} نقطة | المتبقي: <strong class="text-amber-400">${item.stock}</strong></span>
+                    </div>
+                    <button onclick="playSound('click'); initiateStoreBuy(${item.id})" ${isOut ? 'disabled' : ''} class="${isOut ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'gold-gradient text-black font-bold'} px-3 py-1.5 rounded-lg text-[11px]">
+                        ${isOut ? 'نفدت الكمية' : 'استبدال داخلي'}
+                    </button>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function initiateStoreBuy(id) {
+            let user = localStorage.getItem('mansour_sami_user');
+            if(!user) { alert("يرجى تسجيل الدخول أولاً!"); openLoginModal(); return; }
+            let items = getStoreItems();
+            let item = items.find(i => i.id === id);
+            if(!item || item.stock <= 0) { alert("عذراً، هذه الجائزة نفدت."); return; }
+            let points = parseInt(localStorage.getItem(user + '_points') || '0');
+            if(points < item.cost) { alert(`نقاطك الحالية (${points}) لا تكفي.`); return; }
+
+            pendingStoreItemObj = item;
+            document.getElementById('storeOrderTitle').innerText = `الجائزة: ${item.name} (التكلفة: ${item.cost} نقطة)`;
+            document.getElementById('userCustomNote').value = '';
+            document.getElementById('storeOrderModal').classList.remove('hidden');
+        }
+
+        function closeStoreOrderModal() {
+            document.getElementById('storeOrderModal').classList.add('hidden');
+            pendingStoreItemObj = null;
+        }
+
+        function confirmStoreOrder() {
+            let user = localStorage.getItem('mansour_sami_user');
+            if(!user || !pendingStoreItemObj) { closeStoreOrderModal(); return; }
+            let item = pendingStoreItemObj;
+            let note = document.getElementById('userCustomNote').value.trim() || 'بدون ملاحظات';
+            let points = parseInt(localStorage.getItem(user + '_points') || '0');
+            
+            if(points < item.cost) { alert("نقاطك لا تكفي!"); closeStoreOrderModal(); return; }
+
+            points -= item.cost;
+            let items = getStoreItems();
+            let storeItem = items.find(i => i.id === item.id);
+            if(storeItem) storeItem.stock = Math.max(0, storeItem.stock - 1);
+            localStorage.setItem('mansour_store_items', JSON.stringify(items));
+            localStorage.setItem(user + '_points', points);
+
+            let logs = JSON.parse(localStorage.getItem(user + '_logs') || '[]');
+            logs.unshift(`🛒 استبدلت (${item.name}) مقابل ${item.cost} نقطة - ملاحظة: ${note}`);
+            localStorage.setItem(user + '_logs', JSON.stringify(logs));
+
+            let prizeWithNote = `${item.name} (ملاحظة: ${note})`;
+            let requests = getAllRequests();
+            requests.unshift({
+                id: Date.now(),
+                user: user,
+                prize: prizeWithNote,
+                contact: '@' + user,
+                status: "قيد المراجعة داخل الموقع ⏳",
+                date: new Date().toLocaleDateString('ar-IQ')
+            });
+            localStorage.setItem('mansour_admin_requests', JSON.stringify(requests));
+
+            let myPrizes = JSON.parse(localStorage.getItem(user + '_my_prizes') || '[]');
+            myPrizes.push({ name: prizeWithNote, status: "قيد المراجعة داخل الموقع ⏳", contact: '@' + user });
+            localStorage.setItem(user + '_my_prizes', JSON.stringify(myPrizes));
+
+            closeStoreOrderModal();
+            checkUserState();
+            renderStore();
+            openClaimModal(item.name);
+        }
+
+        function openClaimModal(prizeName) {
+            document.getElementById('claimPrizeNameText').innerText = `الجائزة: ${prizeName}`;
+            document.getElementById('claimModal').classList.remove('hidden');
+        }
+
+        function closeClaimModal() { 
+            document.getElementById('claimModal').classList.add('hidden'); 
+            switchTab('prizes', document.querySelector('[data-tab="prizes"]'));
+        }
+
+        function renderWheel() {
+            let prizes = getPrizes();
+            let wheel = document.getElementById('wheel');
+            if(!wheel) return;
+            wheel.innerHTML = '';
+            let angleStep = 360 / prizes.length;
+            let conicGradients = [];
+            
+            prizes.forEach((p, index) => {
+                let startAngle = index * angleStep;
+                let endAngle = (index + 1) * angleStep;
+                let bgColor = index % 2 === 0 ? '#262438' : '#332b4a';
+                conicGradients.push(`${bgColor} ${startAngle}deg ${endAngle}deg`);
+
+                let itemDiv = document.createElement('div');
+                itemDiv.className = 'prize-item';
+                itemDiv.style.transform = `rotate(${startAngle + (angleStep/2)}deg)`;
+                let shortName = p.name.length > 10 ? p.name.substring(0, 9) + '..' : p.name;
+                let stockVal = (p.stock !== undefined) ? p.stock : 3;
+                
+                itemDiv.innerHTML = `
+                    <span class="text-xs">${p.icon || '🎁'}</span>
+                    <span class="text-[8px] text-amber-200 font-bold">${shortName}</span>
+                    <span class="text-[7.5px] text-yellow-300 font-black">باقي: ${stockVal}</span>
+                `;
+                wheel.appendChild(itemDiv);
+            });
+            wheel.style.background = `conic-gradient(${conicGradients.join(', ')})`;
+        }
+
+        function switchTab(tabId, btnElement) {
+            ['home', 'store', 'creators', 'prizes', 'notifications', 'profile'].forEach(t => {
+                let tabEl = document.getElementById('tab-' + t);
+                if(tabEl) tabEl.classList.add('hidden');
+            });
+            let targetTab = document.getElementById('tab-' + tabId);
+            if(targetTab) targetTab.classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(b => {
+                b.classList.remove('text-amber-400');
+                b.classList.add('text-gray-400');
+            });
+            if(btnElement) {
+                btnElement.classList.remove('text-gray-400');
+                btnElement.classList.add('text-amber-400');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if(!localStorage.getItem('mansour_wheel_prizes')) localStorage.setItem('mansour_wheel_prizes', JSON.stringify(defaultPrizes));
+            if(!localStorage.getItem('mansour_store_items')) localStorage.setItem('mansour_store_items', JSON.stringify(defaultStoreItems));
+            trackVisitors();
+            renderWheel();
+            renderStore();
+            checkUserState();
+            renderNotifications();
+            setInterval(checkTimer, 1000);
+        });
+
+        function openLoginModal() { document.getElementById('loginModal').classList.remove('hidden'); }
+        function closeLoginModal() { document.getElementById('loginModal').classList.add('hidden'); }
+        
+        function loginUser() {
+            let val = document.getElementById('userPhoneOrTg').value.trim();
+            if(!val) { alert("يرجى إدخال اسمك أو يوزر تليجرام!"); return; }
+            let cleanUser = cleanUsernameInput(val);
+            if(!cleanUser) { alert("يوزر غير صالح!"); return; }
+            
+            let isNewUser = !localStorage.getItem(cleanUser + '_points');
+            localStorage.setItem('mansour_sami_user', cleanUser);
+            registerUserToList(cleanUser);
+            
+            if(isNewUser) {
+                localStorage.setItem(cleanUser + '_points', '25');
+                localStorage.setItem(cleanUser + '_refs', '0');
+                localStorage.setItem(cleanUser + '_logs', JSON.stringify(['➕ هدية أول تسجيل دخول: +25 نقطة']));
+                
+                let pendingRef = localStorage.getItem('mansour_pending_ref');
+                if(pendingRef && pendingRef !== cleanUser) {
+                    let ownerRefs = parseInt(localStorage.getItem(pendingRef + '_refs') || '0') + 1;
+                    localStorage.setItem(pendingRef + '_refs', ownerRefs);
+                    
+                    let ownerLogs = JSON.parse(localStorage.getItem(pendingRef + '_logs') || '[]');
+                    ownerLogs.unshift(`🔥 انضم صديق جديد عبر رابطك (@${cleanUser}) - إجمالي الإحالات: ${ownerRefs}`);
+                    
+                    if(ownerRefs % 10 === 0) {
+                        let ownerPoints = parseInt(localStorage.getItem(pendingRef + '_points') || '0') + 100;
+                        localStorage.setItem(pendingRef + '_points', ownerPoints);
+                        ownerLogs.unshift(`🎁 مكافأة إتمام 10 أصدقاء مدعوين: +100 نقطة مضافة!`);
+                    }
+                    localStorage.setItem(pendingRef + '_logs', JSON.stringify(ownerLogs));
+                    localStorage.removeItem('mansour_pending_ref');
+                }
+            }
+            closeLoginModal();
+            checkUserState();
+            showToast("تم تسجيل الدخول بنجاح! 🚀");
+        }
+
+        function logoutUser() {
+            localStorage.removeItem('mansour_sami_user');
+            checkUserState();
+            switchTab('home', document.querySelector('[data-tab="home"]'));
+            showToast("تم تسجيل الخروج 👋");
+        }
+
+        function checkUserState() {
+            let user = localStorage.getItem('mansour_sami_user');
+            let guestBox = document.getElementById('guestBox');
+            let loginBtnHeader = document.getElementById('loginBtnHeader');
+            let adminQuickBox = document.getElementById('adminQuickAccessBox');
+            let totalVisits = localStorage.getItem('mansour_total_visitors') || '0';
+            let visitorEl = document.getElementById('globalVisitorsCount');
+            if(visitorEl) visitorEl.innerText = totalVisits;
+
+            if(user) {
+                registerUserToList(user);
+                if(guestBox) guestBox.classList.add('hidden');
+                if(loginBtnHeader) {
+                    loginBtnHeader.innerText = '@' + user;
+                    loginBtnHeader.style.direction = 'ltr';
+                }
+                if(user === ADMIN_USER) adminQuickBox.classList.remove('hidden');
+                else adminQuickBox.classList.add('hidden');
+
+                let points = localStorage.getItem(user + '_points') || '0';
+                let refs = localStorage.getItem(user + '_refs') || '0';
+                let linkClicks = localStorage.getItem(user + '_link_clicks') || '0';
+                
+                let profileNameEl = document.getElementById('profileNameDisplay');
+                profileNameEl.innerText = '@' + user;
+                profileNameEl.style.direction = 'ltr';
+
+                document.getElementById('profileSubDisplay').innerText = (user === ADMIN_USER) ? 'مدير المتجر الرئيسي 👑' : 'لاعب رسمي معتمد';
+                document.getElementById('profilePointsVal').innerText = points;
+                document.getElementById('profileRefsVal').innerText = refs;
+                document.getElementById('profileRefsCountVal').innerText = refs;
+                document.getElementById('profileClicksVal').innerText = linkClicks;
+                document.getElementById('storePoints').innerText = points;
+
+                let myPrizes = JSON.parse(localStorage.getItem(user + '_my_prizes') || '[]');
+                document.getElementById('profilePrizesVal').innerText = myPrizes.length;
+
+                let refLinkInput = document.getElementById('profileRefLink');
+                if(refLinkInput) {
+                    refLinkInput.value = `${window.location.origin + window.location.pathname}?ref=${user}`;
+                    refLinkInput.style.direction = 'ltr';
+                }
+
+                renderUserPrizesAndLogs(user);
+
+                if(localStorage.getItem(user + '_subscribed') === 'true') {
+                    unlockWheelSystem();
+                } else {
+                    lockWheelSystem();
+                }
+            } else {
+                if(guestBox) guestBox.classList.remove('hidden');
+                if(loginBtnHeader) {
+                    loginBtnHeader.innerText = 'تسجيل الدخول';
+                    loginBtnHeader.style.direction = 'rtl';
+                }
+                if(adminQuickBox) adminQuickBox.classList.add('hidden');
+                document.getElementById('profileNameDisplay').innerText = 'زائر';
+                document.getElementById('profileSubDisplay').innerText = '-';
+                document.getElementById('profilePointsVal').innerText = '0';
+                document.getElementById('profileRefsVal').innerText = '0';
+                document.getElementById('profileRefsCountVal').innerText = '0';
+                document.getElementById('profileClicksVal').innerText = '0';
+                document.getElementById('storePoints').innerText = '0';
+                lockWheelSystem();
+            }
+        }
+
+        function lockWheelSystem() {
+            let box = document.getElementById('subChannelBox');
+            if(box) box.innerHTML = `
+                <p class="text-[11px] text-amber-200 font-bold">⚠️ شرط أساسي للتدوير:</p>
+                <a href="https://t.me/BB4BB2" target="_blank" onclick="playSound('click'); markChannelClicked()" class="block bg-black/50 border border-amber-500/50 text-amber-300 p-2 rounded-xl text-xs font-bold hover:bg-black/70 transition">
+                    📢 اشترك في قناة المتجر الرسمية (@BB4BB2)
+                </a>
+                <button onclick="playSound('click'); verifySubscription()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs transition shadow">
+                    ✅ لقد اشتركت في القناة، تحقق الآن
+                </button>
+            `;
+            let wrapper = document.getElementById('wheelWrapper');
+            if(wrapper) wrapper.classList.add('opacity-40', 'pointer-events-none');
+            let spinBtn = document.getElementById('spinBtn');
+            if(spinBtn) {
+                spinBtn.disabled = true;
+                spinBtn.className = 'w-full bg-gray-700 text-gray-400 font-bold py-3 rounded-xl text-xs shadow-lg cursor-not-allowed';
+                spinBtn.innerText = 'أكمل اشتراكك وتسجيل دخولك لأجل التدوير';
+            }
+        }
+
+        function renderUserPrizesAndLogs(user) {
+            let myPrizes = JSON.parse(localStorage.getItem(user + '_my_prizes') || '[]');
+            let prizesContainer = document.getElementById('myPrizesListContainer');
+            if(myPrizes.length > 0) {
+                prizesContainer.innerHTML = myPrizes.map(p => `
+                    <div class="bg-black/40 p-3 rounded-xl border border-amber-500/20 space-y-1">
+                        <div class="flex justify-between items-center">
+                            <span class="text-amber-200 font-bold text-xs">🎁 ${p.name}</span>
+                            <span class="text-[10px] font-bold ${p.status.includes('قيد') ? 'text-amber-400' : 'text-emerald-400'}">${p.status}</span>
+                        </div>
+                    </div>`).join('');
+            } else {
+                prizesContainer.innerHTML = '<p class="text-gray-400 text-xs text-center py-6">لا توجد جوائز بعد</p>';
+            }
+
+            let logs = JSON.parse(localStorage.getItem(user + '_logs') || '[]');
+            let logsEl = document.getElementById('profilePointsLog');
+            if(logsEl) {
+                logsEl.innerHTML = logs.map(l => `<div class="p-2 bg-black/30 rounded-lg mb-1 border border-gray-800/60">${l}</div>`).join('') || 'لا توجد عمليات بعد';
+            }
+        }
+
+        function markChannelClicked() {
+            sessionStorage.setItem('mansour_clicked_channel', 'true');
+        }
+
+        function verifySubscription() {
+            let user = localStorage.getItem('mansour_sami_user');
+            if(!user) { alert("يرجى تسجيل الدخول أولاً!"); openLoginModal(); return; }
+            
+            if(sessionStorage.getItem('mansour_clicked_channel') === 'true') {
+                localStorage.setItem(user + '_subscribed', 'true');
+                unlockWheelSystem();
+                showToast("تم التأكد من الاشتراك! يمكنك تدوير العجلة الآن 🎡");
+            } else {
+                alert("يرجى الضغط على رابط القناة والانضمام أولاً، ثم اضغط على زر التحقق!");
+            }
+        }
+
+        function unlockWheelSystem() {
+            let box = document.getElementById('subChannelBox');
+            if(box) box.innerHTML = `<div class="text-emerald-400 text-xs font-bold py-1">✅ تم الاشتراك بالقناة بنجاح! عجلة الحظ مجهزة بالكامل.</div>`;
+            let wrapper = document.getElementById('wheelWrapper');
+            if(wrapper) wrapper.classList.remove('opacity-40', 'pointer-events-none');
+            checkTimer();
+        }
+
+        function checkTimer() {
+            let user = localStorage.getItem('mansour_sami_user');
+            let spinBtn = document.getElementById('spinBtn');
+            let timerText = document.getElementById('timerText');
+            if(!user || localStorage.getItem(user + '_subscribed') !== 'true') return;
+
+            let lastSpin = parseInt(localStorage.getItem(user + '_last_spin') || '0');
+            let now = Date.now();
+            let cooldown = 24 * 60 * 60 * 1000;
+            let diff = now - lastSpin;
+
+            if(diff < cooldown) {
+                let remaining = cooldown - diff;
+                let hrs = Math.floor(remaining / (1000 * 60 * 60));
+                let mins = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                let secs = Math.floor((remaining % (1000 * 60)) / 1000);
+
+                if(spinBtn) {
+                    spinBtn.disabled = true;
+                    spinBtn.className = 'w-full bg-gray-800 text-gray-500 font-bold py-3 rounded-xl text-xs shadow-lg cursor-not-allowed';
+                    spinBtn.innerText = 'العجلة مغلقة مؤقتاً';
+                }
+                if(timerText) timerText.innerText = `⏳ المتبقي لللفه التالية: ${hrs} ساعة و ${mins} دقيقة و ${secs} ثانية`;
+            } else {
+                if(spinBtn) {
+                    spinBtn.disabled = false;
+                    spinBtn.className = 'w-full gold-gradient text-black font-black py-3 rounded-xl text-xs shadow-lg transform active:scale-98 transition';
+                    spinBtn.innerText = 'أدر العجلة الآن مجاناً 🎡';
+                }
+                if(timerText) timerText.innerText = '';
+            }
+        }
+
+        let isSpinning = false;
+        function spinWheel() {
+            let user = localStorage.getItem('mansour_sami_user');
+            if(!user) { openLoginModal(); return; }
+            if(localStorage.getItem(user + '_subscribed') !== 'true') { alert("اشترك في القناة أولاً لفتح العجلة!"); return; }
+            
+            let lastSpin = parseInt(localStorage.getItem(user + '_last_spin') || '0');
+            let cooldown = 24 * 60 * 60 * 1000;
+            if(Date.now() - lastSpin < cooldown) { alert("يمكنك التدوير مرة واحدة كل 24 ساعة فقط!"); return; }
+            if(isSpinning) return;
+
+            isSpinning = true;
+            let spinBtn = document.getElementById('spinBtn');
+            spinBtn.disabled = true;
+            spinBtn.innerText = 'جاري التدوير... 🎡';
+
+            let prizes = getPrizes();
+            let availablePrizes = prizes.filter(p => (p.weight > 0) && ((p.stock === undefined) || p.stock > 0));
+            
+            let selectedPrize;
+            if(availablePrizes.length === 0) {
+                selectedPrize = prizes.find(p => p.name.includes("نقطة")) || prizes[0];
+            } else {
+                let totalWeight = availablePrizes.reduce((sum, p) => sum + p.weight, 0);
+                let randomNum = Math.random() * totalWeight;
+                let currentWeightSum = 0;
+                for (let p of availablePrizes) {
+                    currentWeightSum += p.weight;
+                    if (randomNum <= currentWeightSum) {
+                        selectedPrize = p;
+                        break;
+                    }
+                }
+            }
+            if(!selectedPrize) selectedPrize = prizes[0];
+
+            let selectedIndex = prizes.findIndex(p => p.name === selectedPrize.name);
+            let angleStep = 360 / prizes.length;
+            let targetDegree = 360 - (selectedIndex * angleStep) - (angleStep / 2);
+            let totalRotation = (360 * 6) + targetDegree;
+
+            let wheel = document.getElementById('wheel');
+            wheel.style.transform = `rotate(${totalRotation}deg)`;
+
+            let soundInterval = setInterval(() => { playSound('spin_tick'); }, 200);
+
+            setTimeout(() => {
+                clearInterval(soundInterval);
+                playSound('win');
+                isSpinning = false;
+                localStorage.setItem(user + '_last_spin', Date.now().toString());
+
+                if(selectedPrize.stock !== undefined && selectedPrize.stock > 0) {
+                    selectedPrize.stock -= 1;
+                    localStorage.setItem('mansour_wheel_prizes', JSON.stringify(prizes));
+                    renderWheel();
+                }
+
+                if(selectedPrize.name.includes("نقطة")) {
+                    let ptsMatch = selectedPrize.name.match(/\d+/);
+                    let pts = ptsMatch ? parseInt(ptsMatch[0]) : 50;
+                    let currentPts = parseInt(localStorage.getItem(user + '_points') || '0') + pts;
+                    localStorage.setItem(user + '_points', currentPts.toString());
+
+                    let logs = JSON.parse(localStorage.getItem(user + '_logs') || '[]');
+                    logs.unshift(`🎉 فزت من العجلة بـ +${pts} نقطة!`);
+                    localStorage.setItem(user + '_logs', JSON.stringify(logs));
+                } else {
+                    let requests = getAllRequests();
+                    requests.unshift({
+                        id: Date.now(),
+                        user: user,
+                        prize: selectedPrize.name,
+                        contact: '@' + user,
+                        status: "قيد المراجعة داخل الموقع ⏳",
+                        date: new Date().toLocaleDateString('ar-IQ')
+                    });
+                    localStorage.setItem('mansour_admin_requests', JSON.stringify(requests));
+
+                    let myPrizes = JSON.parse(localStorage.getItem(user + '_my_prizes') || '[]');
+                    myPrizes.push({ name: selectedPrize.name, status: "قيد المراجعة داخل الموقع ⏳", contact: '@' + user });
+                    localStorage.setItem(user + '_my_prizes', JSON.stringify(myPrizes));
+                }
+
+                checkUserState();
+                openClaimModal(selectedPrize.name);
+            }, 5200);
+        }
+
+        function copyReferralLink() {
+            let input = document.getElementById('profileRefLink');
+            if(input) {
+                input.select();
+                document.execCommand('copy');
+                showToast("تم نسخ رابط الإحالة الخاص بك بنجاح! 📋");
+            }
+        }
+
+        function claimChannelInteractionReward() {
+            let user = localStorage.getItem('mansour_sami_user');
+            if(!user) { alert("يرجى تسجيل الدخول أولاً!"); openLoginModal(); return; }
+
+            let lastClaim = localStorage.getItem(user + '_last_interaction_claim');
+            let now = Date.now();
+            if(lastClaim && (now - parseInt(lastClaim)) < (24 * 60 * 60 * 1000)) {
+                alert("لقد استلمت مكافأة التفاعل لليوم، عد غداً!");
+                return;
+            }
+
+            let pts = parseInt(localStorage.getItem(user + '_points') || '0') + 50;
+            localStorage.setItem(user + '_points', pts.toString());
+            localStorage.setItem(user + '_last_interaction_claim', now.toString());
+
+            let logs = JSON.parse(localStorage.getItem(user + '_logs') || '[]');
+            logs.unshift(`💬 مكافأة التفاعل مع منشورات القناة: +50 نقطة!`);
+            localStorage.setItem(user + '_logs', JSON.stringify(logs));
+
+            checkUserState();
+            showToast("تم إضافة 50 نقطة لرصيدك بنجاح! 🎉");
+        }
+
+        function renderNotifications() {
+            let container = document.getElementById('notificationsContainer');
+            let notifs = JSON.parse(localStorage.getItem('mansour_global_notifs') || '[]');
+            
+            if(container) {
+                if(notifs.length > 0) {
+                    container.innerHTML = notifs.map(n => `
+                        <div class="bg-black/40 p-3 rounded-xl border border-amber-500/20 space-y-1">
+                            <span class="font-bold text-amber-300 block">${n.title}</span>
+                            <p class="text-gray-300 text-[11px]">${n.text}</p>
+                            <span class="text-[9px] text-gray-500 block text-left">${n.date}</span>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p class="text-gray-400 text-center py-4">لا توجد إشعارات حالية</p>';
+                }
+            }
+
+            let usersListEl = document.getElementById('notificationsUsersList');
+            if(usersListEl) {
+                let users = getRegisteredUsers();
+                if(users.length > 0) {
+                    usersListEl.innerHTML = users.slice().reverse().map(u => `
+                        <div class="flex justify-between items-center bg-black/40 p-1.5 rounded-lg border border-amber-500/10">
+                            <span class="text-amber-200 font-bold" style="direction: ltr;">@${u}</span>
+                            <span class="text-[9px] text-emerald-400">عضو جديد ✨</span>
+                        </div>
+                    `).join('');
+                } else {
+                    usersListEl.innerHTML = '<p class="text-gray-400 text-center py-2 text-[11px]">لا يوجد أعضاء بعد</p>';
+                }
+            }
+        }
+
+        function openAdminLogin() { document.getElementById('adminLoginModal').classList.remove('hidden'); }
+        function closeAdminLogin() { document.getElementById('adminLoginModal').classList.add('hidden'); }
+
+        function verifyAdmin() {
+            let pass = document.getElementById('adminPasswordInput').value;
+            if(pass === ADMIN_PASSWORD) {
+                closeAdminLogin();
+                openDirectAdminPanel();
+            } else { alert("كلمة المرور غير صحيحة!"); }
+        }
+
+        function openDirectAdminPanel() {
+            renderAdminPanelData();
+            document.getElementById('adminPanelModal').classList.remove('hidden');
+        }
+
+        function closeAdminPanel() { document.getElementById('adminPanelModal').classList.add('hidden'); }
+
+        function renderAdminPanelData() {
+            document.getElementById('adminTotalVisits').innerText = localStorage.getItem('mansour_total_visitors') || '0';
+
+            let users = getRegisteredUsers();
+            let usersListEl = document.getElementById('adminUsersList');
+            if(usersListEl) {
+                if(users.length > 0) {
+                    usersListEl.innerHTML = users.map(u => {
+                        let pts = localStorage.getItem(u + '_points') || '0';
+                        let refs = localStorage.getItem(u + '_refs') || '0';
+                        return `
+                            <div class="bg-black/50 p-2 rounded-xl border border-amber-500/20 flex justify-between items-center text-[11px]">
+                                <span class="text-amber-300 font-bold" style="direction: ltr;">@${u}</span>
+                                <span class="text-gray-300">النقاط: <strong class="text-amber-400">${pts}</strong> | الإحالات: <strong class="text-purple-400">${refs}</strong></span>
+                            </div>`;
+                    }).join('');
+                } else {
+                    usersListEl.innerHTML = '<p class="text-gray-400 text-center py-2">لا يوجد مشتركين بعد</p>';
+                }
+            }
+
+            let requests = getAllRequests();
+            let deliveredCount = requests.filter(r => r.status.includes("تم التسليم")).length;
+            document.getElementById('adminDeliveredCount').innerText = deliveredCount;
+
+            let reqContainer = document.getElementById('adminRequestsList');
+            if(reqContainer) {
+                if(requests.length > 0) {
+                    reqContainer.innerHTML = requests.map(r => `
+                        <div class="bg-black/50 p-2.5 rounded-xl border border-amber-500/20 space-y-1.5 text-[11px]">
+                            <div class="flex justify-between items-center">
+                                <span class="text-amber-300 font-bold" style="direction: ltr;">${r.contact}</span>
+                                <span class="text-gray-400 text-[10px]">${r.date}</span>
+                            </div>
+                            <div class="text-white">الجائزة والطلب: <strong class="text-amber-200">${r.prize}</strong></div>
+                            <div class="flex justify-between items-center pt-1">
+                                <span class="text-[10px] ${r.status.includes('تم') ? 'text-emerald-400' : 'text-amber-400'} font-bold">${r.status}</span>
+                                ${!r.status.includes('تم') ? `<button onclick="playSound('click'); markRequestDelivered(${r.id})" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2 py-0.5 rounded text-[10px]">تأكيد التسليم ✅</button>` : ''}
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    reqContainer.innerHTML = '<p class="text-gray-400 text-center py-2">لا توجد طلبات حصرية بعد</p>';
+                }
+            }
+
+            let prizes = getPrizes();
+            let prizesListEl = document.getElementById('adminPrizesList');
+            if(prizesListEl) {
+                prizesListEl.innerHTML = prizes.map((p, index) => `
+                    <div class="flex justify-between items-center bg-black/40 p-1.5 rounded-lg border border-amber-500/10 text-[10px]">
+                        <span>${p.icon || '🎁'} ${p.name} (وزن: ${p.weight}) (باقي: ${p.stock})</span>
+                        <button onclick="playSound('click'); removeWheelPrize(${index})" class="text-red-400 font-bold">حذف</button>
+                    </div>
+                `).join('');
+            }
+
+            let storeItems = getStoreItems();
+            let storeListEl = document.getElementById('adminStoreList');
+            if(storeListEl) {
+                storeListEl.innerHTML = storeItems.map((s, index) => `
+                    <div class="flex justify-between items-center bg-black/40 p-1.5 rounded-lg border border-amber-500/10 text-[10px]">
+                        <span>🎁 ${s.name} - التكلفة: ${s.cost} - المتبقي: ${s.stock}</span>
+                        <button onclick="playSound('click'); removeStoreItem(${index})" class="text-red-400 font-bold">حذف</button>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function markRequestDelivered(id) {
+            let requests = getAllRequests();
+            let req = requests.find(r => r.id === id);
+            if(req) {
+                req.status = "تم التسليم بنجاح ✅";
+                localStorage.setItem('mansour_admin_requests', JSON.stringify(requests));
+
+                let myPrizes = JSON.parse(localStorage.getItem(req.user + '_my_prizes') || '[]');
+                let prizeObj = myPrizes.find(p => p.name === req.prize);
+                if(prizeObj) prizeObj.status = "تم التسليم بنجاح ✅";
+                localStorage.setItem(req.user + '_my_prizes', JSON.stringify(myPrizes));
+
+                renderAdminPanelData();
+                showToast("تم تحديث حالة الطلب وتسليمه! ✅");
+            }
+        }
+
+        function sendGlobalNotification() {
+            let title = document.getElementById('adminNotifTitle').value.trim();
+            let text = document.getElementById('adminNotifText').value.trim();
+            if(!title || !text) { alert("يرجى ملء كافة الخانات!"); return; }
+
+            let notifs = JSON.parse(localStorage.getItem('mansour_global_notifs') || '[]');
+            notifs.unshift({ title, text, date: new Date().toLocaleDateString('ar-IQ') });
+            localStorage.setItem('mansour_global_notifs', JSON.stringify(notifs));
+
+            document.getElementById('adminNotifTitle').value = '';
+            document.getElementById('adminNotifText').value = '';
+            renderNotifications();
+            showToast("تم إرسال الإشعار لجميع المشتركين! 🔔");
+        }
+
+        function addWheelPrize() {
+            let name = document.getElementById('newPrizeName').value.trim();
+            let icon = document.getElementById('newPrizeIcon').value.trim() || '🎁';
+            let stock = parseInt(document.getElementById('newPrizeStock').value) || 5;
+            let weight = parseInt(document.getElementById('newPrizeWeight').value) || 10;
+
+            if(!name) { alert("أدخل اسم الجائزة!"); return; }
+
+            let prizes = getPrizes();
+            prizes.push({ name, icon, stock, weight });
+            localStorage.setItem('mansour_wheel_prizes', JSON.stringify(prizes));
+
+            document.getElementById('newPrizeName').value = '';
+            renderWheel();
+            renderAdminPanelData();
+            showToast("تمت إضافة الجائزة للعجلة! 🎡");
+        }
+
+        function removeWheelPrize(index) {
+            let prizes = getPrizes();
+            prizes.splice(index, 1);
+            localStorage.setItem('mansour_wheel_prizes', JSON.stringify(prizes));
+            renderWheel();
+            renderAdminPanelData();
+        }
+
+        function addStoreItem() {
+            let name = document.getElementById('newStoreName').value.trim();
+            let cost = parseInt(document.getElementById('newStoreCost').value) || 100;
+            let stock = parseInt(document.getElementById('newStoreStock').value) || 5;
+
+            if(!name) { alert("أدخل اسم جائزة المتجر!"); return; }
+
+            let items = getStoreItems();
+            items.push({ id: Date.now(), name, cost, stock });
+            localStorage.setItem('mansour_store_items', JSON.stringify(items));
+
+            document.getElementById('newStoreName').value = '';
+            renderStore();
+            renderAdminPanelData();
+            showToast("تمت إضافة الجائزة للمتجر! 🛒");
+        }
+
+        function removeStoreItem(index) {
+            let items = getStoreItems();
+            items.splice(index, 1);
+            localStorage.setItem('mansour_store_items', JSON.stringify(items));
+            renderStore();
+            renderAdminPanelData();
+        }
+
+        function saveAdminSettings() {
+            closeAdminPanel();
+            showToast("تم حفظ التعديلات بنجاح! ✨");
+        }
+    </script>
+</body>
+</html>
