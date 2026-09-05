@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر منصور سامي | منصة الجوائز الرسمية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+        body { font-family: 'Cairo', sans-serif; background-color: #0d0d12; color: #ffffff; }
+        .gold-gradient { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%); }
+        .rgb-glow { box-shadow: 0 0 25px rgba(251, 191, 36, 0.45); }
+        .card-box { background-color: #16161f; border: 1px solid rgba(251, 191, 36, 0.35); border-radius: 18px; box-shadow: 0 8px 25px rgba(0,0,0,0.6); }
+        .profile-card { background: linear-gradient(145deg, #181824 0%, #101017 100%); border: 1px solid rgba(168, 85, 247, 0.4); border-radius: 20px; }
+        
+        .wheel-container { position: relative; width: 280px; height: 280px; margin: 0 auto; }
+        .wheel { width: 100%; height: 100%; border-radius: 50%; border: 6px solid #fbbf24; position: relative; overflow: hidden; transition: transform 4s cubic-bezier(0.1, 0.9, 0.2, 1); background: #262438; }
+        .wheel-pointer { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 20px solid #fbbf24; z-index: 40; filter: drop-shadow(0 0 6px #fbbf24); }
+        .prize-item { position: absolute; width: 60px; height: 45px; left: calc(50% - 30px); top: 10px; transform-origin: 30px 130px; display: flex; flex-direction: column; align-items: center; font-size: 8px; font-weight: 700; color: #fff; text-align: center; }
+
+        .announcement-ticker {
+            background: #1e1b4b;
+            border-bottom: 1px solid rgba(251, 191, 36, 0.3);
+            color: #fbbf24;
+            padding: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .ticker-track { display: inline-block; animation: ticker 20s linear infinite; }
+        @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+    </style>
+</head>
+<body class="pb-28">
+
+    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 bg-amber-400 text-black font-black px-5 py-2.5 rounded-xl text-xs z-[100] opacity-0 transition-all shadow-2xl pointer-events-none">
+        تم بنجاح! ✨
+    </div>
+
+    <!-- الشريط المتحرك -->
+    <div class="announcement-ticker">
+        <div class="ticker-track">
+            ⚡ تنبيه هام: التعامل حصرياً عبر الروابط الرسمية لمتجر منصور سامي | 🏆 مبروك لكل الأبطال الفائزين بجوائز العجلة الأسبوعية
+        </div>
+    </div>
+
+    <header class="flex justify-between items-center p-4 card-box m-3">
+        <div class="flex items-center gap-2 cursor-pointer" ondblclick="openAdminLogin()">
+            <div class="w-10 h-10 rounded-2xl gold-gradient flex items-center justify-center font-black text-black text-xl">م</div>
+            <div>
+                <h1 class="font-bold text-sm text-amber-300">متجر منصور سامي</h1>
+                <span class="text-[10px] text-gray-400">الزوار: <strong id="globalVisitorsCount" class="text-amber-400">1</strong></span>
+            </div>
+        </div>
+        <button onclick="openLoginModal()" id="loginBtnHeader" class="gold-gradient text-black font-bold px-4 py-2 rounded-xl text-xs">تسجيل الدخول</button>
+    </header>
+
+    <main class="p-3 space-y-4 max-w-md mx-auto">
+        <!-- قسم الرئيسية والعجلة -->
+        <div id="tab-home" class="space-y-4">
+            <div id="guestBox" class="card-box p-4 text-center space-y-2">
+                <h2 class="font-bold text-sm text-amber-300">أهلاً بك في متجر منصور سامي</h2>
+                <p class="text-[11px] text-gray-300">سجّل الدخول بيوزرك لكي تلف العجلة وتجمع النقاط!</p>
+                <button onclick="openLoginModal()" class="w-full gold-gradient text-black font-bold py-2.5 rounded-xl text-xs">تسجيل الدخول الآن</button>
+            </div>
+
+            <div class="card-box p-4 text-center space-y-3">
+                <h3 class="font-bold text-sm text-amber-300">عجلة الحظ الحصرية 🔥</h3>
+                
+                <div id="subChannelBox" class="bg-amber-950/40 border border-amber-500/40 p-3 rounded-xl space-y-2">
+                    <p class="text-[11px] text-amber-200 font-bold">⚠️ شرط التدوير:</p>
+                    <a href="https://t.me/BB4BB2" target="_blank" onclick="markChannelClicked()" class="block bg-black/60 border border-amber-500/50 text-amber-300 p-2 rounded-xl text-xs font-bold">
+                        📢 اشترك في القناة الرسمية (@BB4BB2)
+                    </a>
+                    <button onclick="verifySubscription()" class="w-full bg-emerald-600 text-white font-bold py-2 rounded-xl text-xs">
+                        ✅ تأكيد الاشتراك
+                    </button>
+                </div>
+
+                <div class="wheel-container my-4" id="wheelWrapper">
+                    <div class="wheel-pointer"></div>
+                    <div id="wheel" class="wheel"></div>
+                    <div class="absolute inset-[35%] rounded-full bg-[#121215] border-2 border-amber-400 flex items-center justify-center cursor-pointer z-30 rgb-glow" onclick="spinWheel()">
+                        <span class="text-xs font-black text-amber-300">أدر 🎡</span>
+                    </div>
+                </div>
+
+                <button onclick="spinWheel()" id="spinBtn" class="w-full gold-gradient text-black font-bold py-3 rounded-xl text-xs shadow-lg">أدر العجلة الآن 🎡</button>
+                <p id="timerText" class="text-[11px] text-red-400 font-semibold"></p>
+            </div>
+        </div>
+
+        <!-- قسم متجر الاستبدال -->
+        <div id="tab-store" class="space-y-4 hidden">
+            <div class="card-box p-4 space-y-3">
+                <h3 class="font-bold text-sm text-amber-300 border-b border-gray-800 pb-2 flex justify-between">
+                    <span>🛒 متجر استبدال الجوائز</span>
+                    <span class="text-[10px] text-gray-400">نقاطك: <strong id="storePoints" class="text-amber-400">0</strong></span>
+                </h3>
+                <div id="storeItemsContainer" class="space-y-2 text-xs"></div>
+            </div>
+        </div>
+
+        <!-- قسم جوائزي -->
+        <div id="tab-prizes" class="space-y-4 hidden">
+            <div class="card-box p-4 space-y-3">
+                <h3 class="font-bold text-sm text-amber-300 border-b border-gray-800 pb-2">🏆 جوائزي وحالة الطلبات</h3>
+                <div id="myPrizesListContainer" class="space-y-2 text-xs">
+                    <p class="text-gray-400 text-center py-4">لا توجد جوائز حالياً</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- قسم الإشعارات -->
+        <div id="tab-notifications" class="space-y-4 hidden">
+            <div class="card-box p-4 space-y-3">
+                <h3 class="font-bold text-sm text-amber-300 border-b border-gray-800 pb-2">🔔 الإشعارات والمسجلين الجدد</h3>
+                <div id="notificationsContainer" class="space-y-2 text-xs"></div>
+            </div>
+        </div>
+
+        <!-- قسم الملف الشخصي -->
+        <div id="tab-profile" class="space-y-4 hidden">
+            <div id="adminQuickAccessBox" class="hidden">
+                <button onclick="openDirectAdminPanel()" class="w-full bg-purple-600 text-white font-black py-2.5 rounded-xl text-xs">
+                    ⚙️ لوحة تحكم الأدمن
+                </button>
+            </div>
+
+            <div class="profile-card p-4 space-y-3 text-center">
+                <h2 class="font-black text-base text-white" id="profileNameDisplay">زائر</h2>
+                <div class="grid grid-cols-2 gap-2 pt-2">
+                    <div class="card-box p-2 bg-black/40">
+                        <span class="text-[10px] text-gray-400 block">النقاط</span>
+                        <span class="font-black text-amber-400 text-sm" id="profilePointsVal">0</span>
+                    </div>
+                    <div class="card-box p-2 bg-black/40">
+                        <span class="text-[10px] text-gray-400 block">الإحالات</span>
+                        <span class="font-black text-purple-400 text-sm" id="profileRefsVal">0</span>
+                    </div>
+                </div>
+
+                <div class="space-y-2 text-right pt-2 border-t border-gray-800">
+                    <span class="text-xs text-amber-300 font-bold block">🚀 رابط الإحالة الخاص بك:</span>
+                    <div class="flex gap-1">
+                        <input id="profileRefLink" type="text" readonly class="w-full bg-black/80 border border-amber-500/40 p-2 rounded-xl text-[10px] text-amber-300 text-center" />
+                        <button onclick="copyReferralLink()" class="gold-gradient text-black font-black px-3 py-1 rounded-xl text-xs">نسخ 📋</button>
+                    </div>
+                </div>
+
+                <button onclick="logoutUser()" class="w-full bg-red-600/80 text-white font-bold py-2 rounded-xl text-xs mt-3">تسجيل الخروج</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- الشريط السفلي للتنقل -->
+    <nav class="fixed bottom-0 left-0 right-0 card-box bg-[#13131a] flex justify-around py-3 text-[10px] z-50">
+        <button onclick="switchTab('home', this)" class="flex flex-col items-center text-amber-400 nav-btn"><span>🏠</span><span>الرئيسية</span></button>
+        <button onclick="switchTab('store', this)" class="flex flex-col items-center text-gray-400 nav-btn"><span>🛒</span><span>المتجر</span></button>
+        <button onclick="switchTab('prizes', this)" class="flex flex-col items-center text-gray-400 nav-btn"><span>🎁</span><span>جوائزي</span></button>
+        <button onclick="switchTab('notifications', this)" class="flex flex-col items-center text-gray-400 nav-btn"><span>🔔</span><span>الإشعارات</span></button>
+        <button onclick="switchTab('profile', this)" class="flex flex-col items-center text-gray-400 nav-btn"><span>👤</span><span>حسابي</span></button>
+    </nav>
+
+    <!-- النافذة المنبثقة للتسجيل -->
+    <div id="loginModal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
+        <div class="card-box w-full max-w-sm rounded-2xl p-5 space-y-4 text-center">
+            <h3 class="font-bold text-amber-300 text-sm">تسجيل الدخول</h3>
+            <input id="userPhoneOrTg" type="text" placeholder="أدخل اسم المستخدم أو يوزر تليجرام" class="w-full bg-black/50 border border-amber-500/30 p-3 rounded-xl text-white text-xs text-center outline-none">
+            <button onclick="loginUser()" class="w-full gold-gradient text-black font-bold py-3 rounded-xl text-xs shadow">دخول الحساب 🚀</button>
+            <button onclick="closeLoginModal()" class="text-gray-400 text-xs block mx-auto">إلغاء</button>
+        </div>
+    </div>
+
+    <!-- لوحة تحكم الأدمن -->
+    <div id="adminLoginModal" class="fixed inset-0 bg-black/85 hidden z-50 flex items-center justify-center p-4">
+        <div class="card-box w-full max-w-xs p-5 space-y-3 text-center">
+            <h3 class="font-bold text-amber-300 text-sm">🔒 دخول الأدمن</h3>
+            <input id="adminPasswordInput" type="password" placeholder="كلمة المرور" class="w-full bg-black/50 border border-amber-500/40 p-2 rounded-xl text-white text-center text-xs outline-none">
+            <button onclick="verifyAdmin()" class="w-full gold-gradient text-black font-bold py-2 rounded-xl text-xs">دخول</button>
+            <button onclick="closeAdminLogin()" class="text-gray-400 text-xs block mx-auto">إلغاء</button>
+        </div>
+    </div>
+
+    <script>
+        const ADMIN_USER = 'ccc2ooo';
+        const ADMIN_PASSWORD = 'anooalaa';
+
+        let defaultPrizes = [
+            { name: "100 نقطة", icon: "💯" },
+            { name: "رويال باس", icon: "👑" },
+            { name: "50 نقطة", icon: "⚡" },
+            { name: "حساب ببجي", icon: "🔥" },
+            { name: "20 نقطة", icon: "🎁" },
+            { name: "حساب انستا", icon: "📸" }
+        ];
+
+        let defaultStore = [
+            { id: 1, name: "هدية 50 نقطة", cost: 100 },
+            { id: 2, name: "حساب ببجي لفل 70", cost: 1000 },
+            { id: 3, name: "رويال باس مجاني", cost: 500 }
+        ];
+
+        function showToast(msg) {
+            let t = document.getElementById('toast');
+            t.innerText = msg;
+            t.classList.remove('opacity-0');
+            setTimeout(() => t.classList.add('opacity-0'), 2500);
+        }
+
+        function switchTab(tabId, btn) {
+            ['home', 'store', 'prizes', 'notifications', 'profile'].forEach(id => {
+                document.getElementById('tab-' + id).classList.add('hidden');
+            });
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.replace('text-amber-400', 'text-gray-400'));
+            if(btn) btn.classList.replace('text-gray-400', 'text-amber-400');
+        }
+
+        function renderWheel() {
+            let wheel = document.getElementById('wheel');
+            wheel.innerHTML = '';
+            let angle = 360 / defaultPrizes.length;
+            defaultPrizes.forEach((p, idx) => {
+                let item = document.createElement('div');
+                item.className = 'prize-item';
+                item.style.transform = `rotate(${idx * angle + (angle/2)}deg)`;
+                item.innerHTML = `<span>${p.icon}</span><span>${p.name}</span>`;
+                wheel.appendChild(item);
+            });
+        }
+
+        function openLoginModal() { document.getElementById('loginModal').classList.remove('hidden'); }
+        function closeLoginModal() { document.getElementById('loginModal').classList.add('hidden'); }
+        
+        function loginUser() {
+            let val = document.getElementById('userPhoneOrTg').value.trim().replace('@', '');
+            if(!val) return alert("يرجى كتابة اليوزر!");
+            localStorage.setItem('mansour_user', val);
+            if(!localStorage.getItem(val + '_pts')) {
+                localStorage.setItem(val + '_pts', '25');
+                localStorage.setItem(val + '_refs', '0');
+            }
+            closeLoginModal();
+            checkUserState();
+            showToast("تم تسجيل الدخول بنجاح! 🎉");
+        }
+
+        function logoutUser() {
+            localStorage.removeItem('mansour_user');
+            checkUserState();
+            showToast("تم الخروج!");
+        }
+
+        function checkUserState() {
+            let user = localStorage.getItem('mansour_user');
+            if(user) {
+                document.getElementById('guestBox').classList.add('hidden');
+                document.getElementById('loginBtnHeader').innerText = '@' + user;
+                document.getElementById('profileNameDisplay').innerText = '@' + user;
+                
+                let pts = localStorage.getItem(user + '_pts') || '0';
+                let refs = localStorage.getItem(user + '_refs') || '0';
+                
+                document.getElementById('profilePointsVal').innerText = pts;
+                document.getElementById('profileRefsVal').innerText = refs;
+                document.getElementById('storePoints').innerText = pts;
+                document.getElementById('profileRefLink').value = window.location.origin + window.location.pathname + '?ref=' + user;
+
+                if(user === ADMIN_USER) {
+                    document.getElementById('adminQuickAccessBox').classList.remove('hidden');
+                }
+            } else {
+                document.getElementById('guestBox').classList.remove('hidden');
+                document.getElementById('loginBtnHeader').innerText = 'تسجيل الدخول';
+                document.getElementById('profileNameDisplay').innerText = 'زائر';
+            }
+            renderStore();
+        }
+
+        function markChannelClicked() {
+            let user = localStorage.getItem('mansour_user');
+            if(user) localStorage.setItem(user + '_sub', 'true');
+        }
+
+        function verifySubscription() {
+            let user = localStorage.getItem('mansour_user');
+            if(!user) return openLoginModal();
+            localStorage.setItem(user + '_sub', 'true');
+            document.getElementById('subChannelBox').innerHTML = '<p class="text-xs text-emerald-400 font-bold">✅ تم تأكيد اشتراكك بالقناة!</p>';
+            showToast("تم التأكيد! ✅");
+        }
+
+        let isSpinning = false;
+        function spinWheel() {
+            let user = localStorage.getItem('mansour_user');
+            if(!user) return openLoginModal();
+            if(isSpinning) return;
+
+            isSpinning = true;
+            let wheel = document.getElementById('wheel');
+            let randomRot = 1440 + Math.floor(Math.random() * 360);
+            wheel.style.transform = `rotate(${randomRot}deg)`;
+
+            setTimeout(() => {
+                isSpinning = false;
+                let wonIndex = Math.floor(Math.random() * defaultPrizes.length);
+                let prize = defaultPrizes[wonIndex];
+                showToast(`تهانينا! فزت بـ ${prize.name} 🎁`);
+                
+                let pts = parseInt(localStorage.getItem(user + '_pts') || '0') + 50;
+                localStorage.setItem(user + '_pts', pts.toString());
+                checkUserState();
+            }, 4000);
+        }
+
+        function renderStore() {
+            let container = document.getElementById('storeItemsContainer');
+            container.innerHTML = defaultStore.map(item => `
+                <div class="flex justify-between items-center bg-black/40 p-3 rounded-xl border border-amber-500/20">
+                    <div>
+                        <span class="font-bold text-amber-200 block">${item.name}</span>
+                        <span class="text-[10px] text-gray-400">التكلفة: ${item.cost} نقطة</span>
+                    </div>
+                    <button onclick="buyStoreItem('${item.name}', ${item.cost})" class="gold-gradient text-black font-bold px-3 py-1.5 rounded-lg text-[11px]">
+                        استبدال
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function buyStoreItem(name, cost) {
+            let user = localStorage.getItem('mansour_user');
+            if(!user) return openLoginModal();
+            let pts = parseInt(localStorage.getItem(user + '_pts') || '0');
+            if(pts < cost) return alert("نقاطك لا تكفي!");
+            
+            localStorage.setItem(user + '_pts', (pts - cost).toString());
+            checkUserState();
+            showToast(`تم طلب ${name} بنجاح! 🚀`);
+        }
+
+        function copyReferralLink() {
+            let link = document.getElementById('profileRefLink');
+            link.select();
+            navigator.clipboard.writeText(link.value);
+            showToast("تم نسخ الرابط! 📋");
+        }
+
+        function openAdminLogin() { document.getElementById('adminLoginModal').classList.remove('hidden'); }
+        function closeAdminLogin() { document.getElementById('adminLoginModal').classList.add('hidden'); }
+        function verifyAdmin() {
+            if(document.getElementById('adminPasswordInput').value === ADMIN_PASSWORD) {
+                closeAdminLogin();
+                alert("أهلاً بك يا مدير الموقع منصور سامي 👑");
+            } else alert("كلمة المرور خاطئة!");
+        }
+
+        window.onload = () => {
+            renderWheel();
+            checkUserState();
+        };
+    </script>
+</body>
+</html>
